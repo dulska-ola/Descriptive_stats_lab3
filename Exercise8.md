@@ -26,9 +26,35 @@ Examples:
 
 ```python
 import pandas as pd
-df_pokemon = pd.read_csv("data/pokemon.csv")
+df_pokemon = pd.read_csv("pokemon.csv")
 df_pokemon["Type 1"].value_counts()
 ```
+
+
+
+
+    Type 1
+    Water       112
+    Normal       98
+    Grass        70
+    Bug          69
+    Psychic      57
+    Fire         52
+    Electric     44
+    Rock         44
+    Ground       32
+    Ghost        32
+    Dragon       32
+    Dark         31
+    Poison       28
+    Fighting     27
+    Steel        27
+    Ice          24
+    Fairy        17
+    Flying        4
+    Name: count, dtype: int64
+
+
 
 2. **Ordinal** scale
 - Data can be ordered, but the distances between them are not known.
@@ -46,6 +72,10 @@ titanic = sns.load_dataset("titanic")
 
 print(titanic["class"].unique())
 ```
+
+    ['Third', 'First', 'Second']
+    Categories (3, str): ['First', 'Second', 'Third']
+    
 
 3. **Interval** scale
 - The data is numerical, with equal intervals, but lacks an absolute zero.
@@ -70,6 +100,87 @@ Examples:
 ```python
 df_pokemon[["HP", "Attack", "Speed"]].describe()
 ```
+
+
+
+
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>HP</th>
+      <th>Attack</th>
+      <th>Speed</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>count</th>
+      <td>800.000000</td>
+      <td>800.000000</td>
+      <td>800.000000</td>
+    </tr>
+    <tr>
+      <th>mean</th>
+      <td>69.258750</td>
+      <td>79.001250</td>
+      <td>68.277500</td>
+    </tr>
+    <tr>
+      <th>std</th>
+      <td>25.534669</td>
+      <td>32.457366</td>
+      <td>29.060474</td>
+    </tr>
+    <tr>
+      <th>min</th>
+      <td>1.000000</td>
+      <td>5.000000</td>
+      <td>5.000000</td>
+    </tr>
+    <tr>
+      <th>25%</th>
+      <td>50.000000</td>
+      <td>55.000000</td>
+      <td>45.000000</td>
+    </tr>
+    <tr>
+      <th>50%</th>
+      <td>65.000000</td>
+      <td>75.000000</td>
+      <td>65.000000</td>
+    </tr>
+    <tr>
+      <th>75%</th>
+      <td>80.000000</td>
+      <td>100.000000</td>
+      <td>90.000000</td>
+    </tr>
+    <tr>
+      <th>max</th>
+      <td>255.000000</td>
+      <td>190.000000</td>
+      <td>180.000000</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+
+
 
 ### Table: Measurement scales in statistics
 
@@ -199,6 +310,13 @@ numbers = [1, 2, 3, 4]
 sum(numbers)/len(numbers)
 ```
 
+
+
+
+    2.5
+
+
+
 - The most common measure of central tendency is the average.
 - The mean is also known as the simple average.
 - It is denoted by the Greek letter $µ$ for a population and $\bar{x}$ for a sample.
@@ -222,6 +340,13 @@ The `numpy` package has a function that calculates an `average` on a `list` or `
 np.mean(numbers)
 ```
 
+
+
+
+    np.float64(2.5)
+
+
+
 #### `scipy.stats.tmean`
 
 The [scipy.stats](https://docs.scipy.org/doc/scipy/tutorial/stats.html) library has a variety of statistical functions.
@@ -230,6 +355,13 @@ The [scipy.stats](https://docs.scipy.org/doc/scipy/tutorial/stats.html) library 
 ```python
 stats.tmean(numbers)
 ```
+
+
+
+
+    np.float64(2.5)
+
+
 
 #### Calculating the `average` of a `pandas` column.
 
@@ -243,9 +375,70 @@ df_gapminder.head(2)
 ```
 
 
+
+
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>country</th>
+      <th>year</th>
+      <th>population</th>
+      <th>continent</th>
+      <th>life_exp</th>
+      <th>gdp_cap</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>Afghanistan</td>
+      <td>1952</td>
+      <td>8425333</td>
+      <td>Asia</td>
+      <td>28.801</td>
+      <td>779.445314</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>Afghanistan</td>
+      <td>1957</td>
+      <td>9240934</td>
+      <td>Asia</td>
+      <td>30.332</td>
+      <td>820.853030</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+
+
+
+
 ```python
 df_gapminder['life_exp'].mean()
 ```
+
+
+
+
+    np.float64(59.474439366197174)
+
+
 
 #### Your turn
 
@@ -257,6 +450,9 @@ How to calculate the mean life expectancy for EUROPEan countries (2007).
 mean_life_expectancy = df_gapminder[(df_gapminder['continent']=='Europe')&(df_gapminder['year']==2007)]['life_exp'].mean()
 print(mean_life_expectancy)
 ```
+
+    77.6486
+    
 
 #### *Average* and skewness
 
@@ -273,6 +469,12 @@ sns.histplot(data = df_gapminder, x = "gdp_cap")
 plt.axvline(df_gapminder['gdp_cap'].mean(), linestyle = "dotted");
 ```
 
+
+    
+![png](Exercise8_files/Exercise8_33_0.png)
+    
+
+
 #### Your turn
 
 Is it possible to calculate the average of the column “continent”? Why or why not?
@@ -281,6 +483,24 @@ Is it possible to calculate the average of the column “continent”? Why or wh
 ```python
 df_gapminder['continent']
 ```
+
+
+
+
+    0         Asia
+    1         Asia
+    2         Asia
+    3         Asia
+    4         Asia
+             ...  
+    1699    Africa
+    1700    Africa
+    1701    Africa
+    1702    Africa
+    1703    Africa
+    Name: continent, Length: 1704, dtype: str
+
+
 
 
 ```python
@@ -305,6 +525,9 @@ sum_deviation = np.sum(numbers - mean)
 print(sum_deviation)
 ```
 
+    0.0
+    
+
 #### Summary of the first part
 
 - The mean is one of the most common measures of central tendency.  
@@ -328,6 +551,13 @@ print(sum_deviation)
 df_gapminder['gdp_cap'].median()
 ```
 
+
+
+
+    np.float64(3531.8469885)
+
+
+
 #### Comparison of `median` and `average`.
 
 The direction of inclination has less effect on the `median`.
@@ -338,6 +568,12 @@ sns.histplot(data = df_gapminder, x = "gdp_cap")
 plt.axvline(df_gapminder['gdp_cap'].mean(), linestyle = "dotted", color = "blue")
 plt.axvline(df_gapminder['gdp_cap'].median(), linestyle = "dashed", color = "red");
 ```
+
+
+    
+![png](Exercise8_files/Exercise8_43_0.png)
+    
+
 
 #### Your turn
 
@@ -357,9 +593,17 @@ Unlike `median` or `average`, `mode` can be used with **categorical** data.
 
 
 ```python
-df_pokemon = pd.read_csv("data/pokemon.csv")
+df_pokemon = pd.read_csv("pokemon.csv")
 df_pokemon['Type 1'].mode()
 ```
+
+
+
+
+    0    Water
+    Name: Type 1, dtype: str
+
+
 
 #### `mode()` returns multiple values?
 
@@ -370,6 +614,24 @@ df_pokemon['Type 1'].mode()
 ```python
 df_gapminder['gdp_cap'].mode()
 ```
+
+
+
+
+    0          241.165876
+    1          277.551859
+    2          298.846212
+    3          299.850319
+    4          312.188423
+                ...      
+    1699     80894.883260
+    1700     95458.111760
+    1701    108382.352900
+    1702    109347.867000
+    1703    113523.132900
+    Name: gdp_cap, Length: 1704, dtype: float64
+
+
 
 ### Measures of central tendency - summary
 
@@ -513,6 +775,9 @@ mydata_sorted = sorted(mydata)
 print("Sorted data:", mydata_sorted)
 ```
 
+    Sorted data: [3, 5, 7, 8, 12, 13, 14, 18, 21]
+    
+
 
 ```python
 # Conversion to Pandas Series
@@ -540,6 +805,19 @@ print(f"D9 (90%): {d9}")
 print("\nPercentiles:")
 print(f"P95 (95%): {p95}")
 ```
+
+    Quantiles:
+    Q1 (25%): 7.0
+    Median (50%): 12.0
+    Q3 (75%): 14.0
+    
+    Deciles:
+    D1 (10%): 4.6
+    D9 (90%): 18.6
+    
+    Percentiles:
+    P95 (95%): 19.799999999999997
+    
 
 
 ```python
@@ -575,6 +853,12 @@ ax.legend(bbox_to_anchor=(1.05, 1), loc='upper left')
 plt.show()
 ```
 
+
+    
+![png](Exercise8_files/Exercise8_55_0.png)
+    
+
+
 ### Your turn!
 
 Try to change the boxplot into the violin plot (or add it). 
@@ -609,6 +893,12 @@ axes[0].set_title("Lower variance");
 axes[1].set_title("Higher variance");
 ```
 
+
+    
+![png](Exercise8_files/Exercise8_60_0.png)
+    
+
+
 ### Volatility detection
 
 There are at least *three* main approaches to quantifying variability:
@@ -629,9 +919,23 @@ d1.max() - d1.min()
 ```
 
 
+
+
+    np.float64(7.273520338036553)
+
+
+
+
 ```python
 d2.max() - d2.min()
 ```
+
+
+
+
+    np.float64(31.080108056507882)
+
+
 
 ### IQR
 
@@ -652,11 +956,25 @@ q3 - q1
 ```
 
 
+
+
+    np.float64(1.2709003372643837)
+
+
+
+
 ```python
 ## Let's calculate quantiles - quartiles Q1 and Q3
 q3, q1 = np.percentile(d2, [75 ,25])
 q3 - q1
 ```
+
+
+
+
+    np.float64(7.07831500525432)
+
+
 
 ### Variance and standard deviation.
 
@@ -702,9 +1020,23 @@ df_pokemon['Attack'].std()
 ```
 
 
+
+
+    np.float64(32.45736586949845)
+
+
+
+
 ```python
 df_pokemon['HP'].std()
 ```
+
+
+
+
+    np.float64(25.53466903233207)
+
+
 
 #### Note on `numpy.std`!!!
 
@@ -720,10 +1052,24 @@ d1.std()
 ```
 
 
+
+
+    np.float64(0.9813312813888081)
+
+
+
+
 ```python
 ### SD for sample
 d1.std(ddof = 1)
 ```
+
+
+
+
+    np.float64(0.9818223153356677)
+
+
 
 ### Coefficient of variation (CV).
 
@@ -751,6 +1097,12 @@ print(f"Sample variance (scipy): {var_sample}")
 print(f"Sample sd (scipy): {std_sample}")
 print(f"CV (scipy): {cv_sample:.2f}%")
 ```
+
+    Mean: 5.0
+    Sample variance (scipy): 4.571428571428571
+    Sample sd (scipy): 2.138089935299395
+    CV (scipy): 42.76%
+    
 
 ## Interquartile deviation
 
@@ -861,6 +1213,9 @@ X = [2, 4, 4, 4, 5, 5, 7, 9]
 skewness = skew(X)
 print(f"Skewness of X: {skewness:.4f}")
 ```
+
+    Skewness of X: 0.6562
+    
 
 ### Your turn
 
@@ -998,6 +1353,10 @@ regular_kurt = kurtosis(data, fisher=False)
 print("Regular Kurtosis:", regular_kurt)
 ```
 
+    Excess Kurtosis: -1.6660010752838508
+    Regular Kurtosis: 1.3339989247161492
+    
+
 ### Interquartile Kurtosis
 
 **IQR Kurtosis** is a robust, non-parametric measure of kurtosis that focuses on the tails of the distribution using interquartile ranges. It is particularly useful for detecting the intensity of extreme values in data distributions, especially when outliers are present.
@@ -1074,6 +1433,19 @@ quantitative = df_pokemon.select_dtypes(include='number')
 print(markdown_summary(quantitative))
 ```
 
+    |            |   count |    mean |     std |   min |    25% |   50% |    75% |   max |   Skewness |   Kurtosis |
+    |------------|---------|---------|---------|-------|--------|-------|--------|-------|------------|------------|
+    | #          |     800 | 362.814 | 208.344 |     1 | 184.75 | 364.5 | 539.25 |   721 |     -0.001 |     -1.166 |
+    | Total      |     800 | 435.102 | 119.963 |   180 | 330    | 450   | 515    |   780 |      0.153 |     -0.507 |
+    | HP         |     800 |  69.259 |  25.535 |     1 |  50    |  65   |  80    |   255 |      1.568 |      7.232 |
+    | Attack     |     800 |  79.001 |  32.457 |     5 |  55    |  75   | 100    |   190 |      0.552 |      0.17  |
+    | Defense    |     800 |  73.842 |  31.184 |     5 |  50    |  70   |  90    |   230 |      1.156 |      2.726 |
+    | Sp. Atk    |     800 |  72.82  |  32.722 |    10 |  49.75 |  65   |  95    |   194 |      0.745 |      0.298 |
+    | Sp. Def    |     800 |  71.902 |  27.829 |    20 |  50    |  70   |  90    |   230 |      0.854 |      1.628 |
+    | Speed      |     800 |  68.278 |  29.06  |     5 |  45    |  65   |  90    |   180 |      0.358 |     -0.236 |
+    | Generation |     800 |   3.324 |   1.661 |     1 |   2    |   3   |   5    |     6 |      0.014 |     -1.24  |
+    
+
 To make a summary table cross-sectionally (i.e. **by group**), you need to use the groupby() method on the DataFrame and then, for example, describe() or your own aggregate function. 
 
 Let's say you want to group the data by the ‘Type 1’ column (i.e. e.g. Pokémon type: Fire, Water, etc.) and then summarise the quantitative variables (mean, variance, min, max, etc.).
@@ -1084,6 +1456,75 @@ Let's say you want to group the data by the ‘Type 1’ column (i.e. e.g. Poké
 group_summary = df_pokemon.groupby('Type 1')[quantitative.columns].describe()
 print(group_summary)
 ```
+
+                  #                                                               \
+              count        mean         std    min     25%    50%     75%    max   
+    Type 1                                                                         
+    Bug        69.0  334.492754  210.445160   10.0  168.00  291.0  543.00  666.0   
+    Dark       31.0  461.354839  176.022072  197.0  282.00  509.0  627.00  717.0   
+    Dragon     32.0  474.375000  170.190169  147.0  373.00  443.5  643.25  718.0   
+    Electric   44.0  363.500000  202.731063   25.0  179.75  403.5  489.75  702.0   
+    Fairy      17.0  449.529412  271.983942   35.0  176.00  669.0  683.00  716.0   
+    Fighting   27.0  363.851852  218.565200   56.0  171.50  308.0  536.00  701.0   
+    Fire       52.0  327.403846  226.262840    4.0  143.50  289.5  513.25  721.0   
+    Flying      4.0  677.750000   42.437209  641.0  641.00  677.5  714.25  715.0   
+    Ghost      32.0  486.500000  209.189218   92.0  354.75  487.0  709.25  711.0   
+    Grass      70.0  344.871429  200.264385    1.0  187.25  372.0  496.75  673.0   
+    Ground     32.0  356.281250  204.899855   27.0  183.25  363.5  535.25  645.0   
+    Ice        24.0  423.541667  175.465834  124.0  330.25  371.5  583.25  713.0   
+    Normal     98.0  319.173469  193.854820   16.0  161.25  296.5  483.00  676.0   
+    Poison     28.0  251.785714  228.801767   23.0   33.75  139.5  451.25  691.0   
+    Psychic    57.0  380.807018  194.600455   63.0  201.00  386.0  528.00  720.0   
+    Rock       44.0  392.727273  213.746140   74.0  230.75  362.5  566.25  719.0   
+    Steel      27.0  442.851852  164.847180  208.0  305.50  379.0  600.50  707.0   
+    Water     112.0  303.089286  188.440807    7.0  130.00  275.0  456.25  693.0   
+    
+              Total              ...   Speed        Generation            \
+              count        mean  ...     75%    max      count      mean   
+    Type 1                       ...                                       
+    Bug        69.0  378.927536  ...   85.00  160.0       69.0  3.217391   
+    Dark       31.0  445.741935  ...   98.50  125.0       31.0  4.032258   
+    Dragon     32.0  550.531250  ...   97.75  120.0       32.0  3.875000   
+    Electric   44.0  443.409091  ...  101.50  140.0       44.0  3.272727   
+    Fairy      17.0  413.176471  ...   60.00   99.0       17.0  4.117647   
+    Fighting   27.0  416.444444  ...   86.00  118.0       27.0  3.370370   
+    Fire       52.0  458.076923  ...   96.25  126.0       52.0  3.211538   
+    Flying      4.0  485.000000  ...  121.50  123.0        4.0  5.500000   
+    Ghost      32.0  439.562500  ...   84.25  130.0       32.0  4.187500   
+    Grass      70.0  421.142857  ...   80.00  145.0       70.0  3.357143   
+    Ground     32.0  437.500000  ...   90.00  120.0       32.0  3.156250   
+    Ice        24.0  433.458333  ...   80.00  110.0       24.0  3.541667   
+    Normal     98.0  401.683673  ...   90.75  135.0       98.0  3.051020   
+    Poison     28.0  399.142857  ...   77.00  130.0       28.0  2.535714   
+    Psychic    57.0  475.947368  ...  104.00  180.0       57.0  3.385965   
+    Rock       44.0  453.750000  ...   70.00  150.0       44.0  3.454545   
+    Steel      27.0  487.703704  ...   70.00  110.0       27.0  3.851852   
+    Water     112.0  430.455357  ...   82.00  122.0      112.0  2.857143   
+    
+                                                   
+                   std  min   25%  50%   75%  max  
+    Type 1                                         
+    Bug       1.598433  1.0  2.00  3.0  5.00  6.0  
+    Dark      1.353609  2.0  3.00  5.0  5.00  6.0  
+    Dragon    1.431219  1.0  3.00  4.0  5.00  6.0  
+    Electric  1.604697  1.0  2.00  4.0  4.25  6.0  
+    Fairy     2.147160  1.0  2.00  6.0  6.00  6.0  
+    Fighting  1.800601  1.0  1.50  3.0  5.00  6.0  
+    Fire      1.850665  1.0  1.00  3.0  5.00  6.0  
+    Flying    0.577350  5.0  5.00  5.5  6.00  6.0  
+    Ghost     1.693203  1.0  3.00  4.0  6.00  6.0  
+    Grass     1.579173  1.0  2.00  3.5  5.00  6.0  
+    Ground    1.588454  1.0  1.75  3.0  5.00  5.0  
+    Ice       1.473805  1.0  2.75  3.0  5.00  6.0  
+    Normal    1.575407  1.0  2.00  3.0  4.00  6.0  
+    Poison    1.752927  1.0  1.00  1.5  4.00  6.0  
+    Psychic   1.644845  1.0  2.00  3.0  5.00  6.0  
+    Rock      1.848375  1.0  2.00  3.0  5.00  6.0  
+    Steel     1.350319  2.0  3.00  3.0  5.00  6.0  
+    Water     1.558800  1.0  1.00  3.0  4.00  6.0  
+    
+    [18 rows x 72 columns]
+    
 
 ## Cross-sectional analysis
 
@@ -1099,6 +1540,12 @@ grouped_summary['Kurtosis'] = grouped_attack.apply(lambda x: x.kurt())
 from tabulate import tabulate
 print(tabulate(grouped_summary, headers='keys', tablefmt='github'))  #summary in markdown table now
 ```
+
+    | Legendary   |   count |     mean |     std |   min |   25% |   50% |   75% |   max |   Skewness |   Kurtosis |
+    |-------------|---------|----------|---------|-------|-------|-------|-------|-------|------------|------------|
+    | False       |     735 |  75.6694 | 30.4902 |     5 |  54.5 |    72 |    95 |   185 |   0.523333 |   0.145037 |
+    | True        |      65 | 116.677  | 30.348  |    50 | 100   |   110 |   131 |   190 |   0.50957  |  -0.18957  |
+    
 
 ### Your turn!
 
