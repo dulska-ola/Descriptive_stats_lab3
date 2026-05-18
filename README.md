@@ -2,3 +2,5 @@
 [Data Wrangling report](Data_Wrangling_Report.md)  
 
 [Data Cleansing & Data Visualization report](Cleaning_Data_in_Python_live_session.md)
+
+[Univariate analysis report (together with data visualization)](Univariate_combined_report.md)
