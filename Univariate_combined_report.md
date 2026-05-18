@@ -3056,7 +3056,8 @@ plt.show()
     
 ![png](Cleaning_Data_in_Python_live_session_files/Cleaning_Data_in_Python_live_session_92_0.png)
 
-Our interpretation of the univariate analysis assignment was that we should complete the Exercise8.ipynb file, and that the experience gained would help us with future labs and assignments. We hope this approach is correct. We started wondering if we understood it correctly only shortly before the deadline, which is why we didn't have enough time to clarify it earlier.# Univariate Analysis
+Our interpretation of the univariate analysis assignment was that we should complete the Exercise8.ipynb file, and that the experience gained would help us with future labs and assignments. We hope this approach is correct. We started wondering if we understood it correctly only shortly before the deadline, which is why we didn't have enough time to clarify it earlier.
+# Univariate Analysis
 
 ## Looking ahead: April Week 4, May Week 1
 
