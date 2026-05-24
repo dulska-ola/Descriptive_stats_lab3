@@ -3484,7 +3484,7 @@ plt.show()
     
 
 
-# Bivariate analysis/ Tips.ipynb
+# Bivariate analysis
 
 Calculating correlation coefficiencies
 
