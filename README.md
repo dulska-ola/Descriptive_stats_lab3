@@ -3,4 +3,4 @@
 
 [Data Cleansing & Data Visualization report](Cleaning_Data_in_Python_live_session.md)
 
-[Univariate analysis report (together with data visualization)](Univariate_combined_report.md)
+[Univariate analysis report](Cleaning_Data_in_Python_live_session.md)
