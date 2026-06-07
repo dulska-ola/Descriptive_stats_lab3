@@ -6,3 +6,5 @@
 [Univariate analysis report](Cleaning_Data_in_Python_live_session.md)
 
 [Bivariate analysis report](Cleaning_Data_in_Python_live_session.md)
+
+[Multivariate analysis report](Cleaning_Data_in_Python_live_session.md)

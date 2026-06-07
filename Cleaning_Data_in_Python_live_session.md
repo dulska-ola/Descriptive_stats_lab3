@@ -3272,7 +3272,7 @@ plt.axvline(airbnb['price'].median(), linestyle="dotted",color="blue")
 
 
 
-    <matplotlib.lines.Line2D at 0x182adf20b60>
+    <matplotlib.lines.Line2D at 0x25925407380>
 
 
 
@@ -3484,7 +3484,7 @@ plt.show()
     
 
 
-# Bivariate analysis
+# Bivariate analysis/ Tips.ipynb
 
 Calculating correlation coefficiencies
 
@@ -3635,7 +3635,7 @@ plt.grid(True, axis='y', linestyle='--', alpha=0.5)
 plt.show()
 ```
 
-    C:\Users\dulsk\AppData\Local\Temp\ipykernel_19600\2986770890.py:3: FutureWarning: 
+    C:\Users\bilma\AppData\Local\Temp\ipykernel_13280\2986770890.py:3: FutureWarning: 
     
     Passing `palette` without assigning `hue` is deprecated and will be removed in v0.14.0. Assign the `x` variable to `hue` and set `legend=False` for the same effect.
     
@@ -3710,6 +3710,8 @@ plt.show()
     
 
 
+# MULTIVARIATE REPORT
+
 Interpretation
 
 Technical Justification:Regular scatter plots suffer from overplotting when dealing with large datasets like Airbnb. Thousands of overlapping points make it impossible to see the actual density of the sample.
@@ -3717,1645 +3719,134 @@ Technical Justification:Regular scatter plots suffer from overplotting when deal
 Analytical Insight: Introducing a Hexbin density plot clearly reveals the "center of mass" of our dataset. The vast majority of listings tightly cluster in the bottom-left corner (low number of reviews and low stays). This proves that the market is heavily dominated by infrequently rented or relatively new listings, highlighting a business ecosystem driven by the "long tail" effect.
 
 
-# Exercise8.ipynb report just in case
-
-# Univariate Analysis
-
-## Looking ahead: April Week 4, May Week 1
-
-- In the end of April and early May, we'll dive deep into **statistics** finally.  
-  - How do we calculate descriptive statistics in Python?
-  - What principles should we keep in mind?
-
-Univariate analysis is a type of statistical analysis that involves examining the distribution and characteristics of a single variable. The prefix “uni-” means “one,” so univariate analysis focuses on one variable at a time, without considering relationships between variables.
-
-Univariate analysis is the foundation of data analysis and is essential for understanding the basic structure of your data before moving on to more complex techniques like bivariate or multivariate analysis.
-
-# Measurement scales
-
-Measurement scales determine what mathematical and statistical operations can be performed on data. There are four basic types of scales:
-
-1. **Nominal** scale
-- Data is used only for naming or categorizing.
-- The order between values cannot be determined.
-- Possible operations: count, mode, frequency analysis.
-
-Examples:
-- Pokémon type (type_1): “fire”, ‘water’, ‘grass’, etc.
-- Species, gender, colors, brands etc.
-
-
-```python
-import pandas as pd
-df_pokemon = pd.read_csv("pokemon.csv")
-df_pokemon["Type 1"].value_counts()
-```
-
-
-
-
-    Type 1
-    Water       112
-    Normal       98
-    Grass        70
-    Bug          69
-    Psychic      57
-    Fire         52
-    Electric     44
-    Rock         44
-    Ground       32
-    Ghost        32
-    Dragon       32
-    Dark         31
-    Poison       28
-    Fighting     27
-    Steel        27
-    Ice          24
-    Fairy        17
-    Flying        4
-    Name: count, dtype: int64
-
-
-
-2. **Ordinal** scale
-- Data can be ordered, but the distances between them are not known.
-- Possible operations: median, quantiles, rank tests (e.g. Spearman).
-
-Examples:
-- Strength level: "low", "medium", "high".
-- Quality ratings: "weak", "good", "very good".
-
-
 ```python
 import seaborn as sns
-
-titanic = sns.load_dataset("titanic")
-
-print(titanic["class"].unique())
-```
-
-    ['Third', 'First', 'Second']
-    Categories (3, str): ['First', 'Second', 'Third']
-    
-
-3. **Interval** scale
-- The data is numerical, with equal intervals, but lacks an absolute zero.
-- Differences, mean, and standard deviation can be calculated.
-- Ratios (e.g., "twice as much") do not make sense.
-
-Examples:
-- Temperature in °C (but not in Kelvin!). Why? There is no absolute zero—zero does not mean the absence of the property; it is just a conventional reference point. 0°C does not mean no temperature; 20°C is not 2 × 10°C.
-- Year in a calendar (e.g., 1990). Why? Year 0 does not mark the beginning of time; 2000 is not 2 × 1000.
-- Time in the hourly system (e.g., 13:00). Why? 0:00 does not mean no time, but rather an established reference point.
-
-4. **Ratio** scale
-- Numerical data with an absolute zero.
-- All mathematical operations, including division, can be performed.
-  
-> **Not all numerical data is on a ratio scale!** For example, temperature in degrees Celsius is not on a ratio scale because 0°C does not mean the absence of temperature. However, temperature in Kelvin (K) is, as 0 K represents the absolute absence of thermal energy.
-
-Examples:
-- Height, weight, number of Pokémon attack points (attack), HP, speed.
-
-
-```python
-df_pokemon[["HP", "Attack", "Speed"]].describe()
-```
-
-
-
-
-<div>
-<style scoped>
-    .dataframe tbody tr th:only-of-type {
-        vertical-align: middle;
-    }
-
-    .dataframe tbody tr th {
-        vertical-align: top;
-    }
-
-    .dataframe thead th {
-        text-align: right;
-    }
-</style>
-<table border="1" class="dataframe">
-  <thead>
-    <tr style="text-align: right;">
-      <th></th>
-      <th>HP</th>
-      <th>Attack</th>
-      <th>Speed</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <th>count</th>
-      <td>800.000000</td>
-      <td>800.000000</td>
-      <td>800.000000</td>
-    </tr>
-    <tr>
-      <th>mean</th>
-      <td>69.258750</td>
-      <td>79.001250</td>
-      <td>68.277500</td>
-    </tr>
-    <tr>
-      <th>std</th>
-      <td>25.534669</td>
-      <td>32.457366</td>
-      <td>29.060474</td>
-    </tr>
-    <tr>
-      <th>min</th>
-      <td>1.000000</td>
-      <td>5.000000</td>
-      <td>5.000000</td>
-    </tr>
-    <tr>
-      <th>25%</th>
-      <td>50.000000</td>
-      <td>55.000000</td>
-      <td>45.000000</td>
-    </tr>
-    <tr>
-      <th>50%</th>
-      <td>65.000000</td>
-      <td>75.000000</td>
-      <td>65.000000</td>
-    </tr>
-    <tr>
-      <th>75%</th>
-      <td>80.000000</td>
-      <td>100.000000</td>
-      <td>90.000000</td>
-    </tr>
-    <tr>
-      <th>max</th>
-      <td>255.000000</td>
-      <td>190.000000</td>
-      <td>180.000000</td>
-    </tr>
-  </tbody>
-</table>
-</div>
-
-
-
-### Table: Measurement scales in statistics
-
-| Scale          | Example                           | Is it possible to order? | Equal spacing? | Absolute zero? | Sample statistical calculations       |
-|----------------|-------------------------------------|--------------------------|----------------|------------------|------------------------------------------|
-| **Nominal**  | Pokémon type (`fire`, `water` etc.)| ❌                       | ❌             | ❌               | Mode, counts, frequency analysis      |
-| **Ordinal** | Ticket class (`First`, `Second`, `Third`) | ✅                       | ❌             | ❌               | Median, quantiles         |
-| **Interval** | Temperature in °C                  | ✅                       | ✅             | ❌               | Mean, standard deviation         |
-| **Ratio**  | HP, attack, height                   | ✅                       | ✅             | ✅               | All mathematical operations/statistical |
-
-**Conclusion**: The type of scale affects the choice of statistical methods - for example, the Pearson correlation test requires quotient or interval data, while the Chi² test requires nominal data.
-
-![title](img/scales.jpg)
-
-### Quiz: measurement scales in statistics.
-
-Answer the following questions by choosing **one correct answer**. You will find the solutions at the end.
-
----
-
-#### 1. Which scale **enables ordering of data**, but **does not have equal spacing**?
-- A) Nominal  
-- B) Ordinal  
-- C) Interval  
-- D) Ratio  
-
----
-
-#### 2. An example of a variable on the **nominal scale** is:
-- A) Temperature in °C  
-- B) Height  
-- C) Type of Pokémon (`fire`, `grass`, `water`)  
-- D) Satisfaction level (`low`, `medium`, `high`).  
-
----
-
-#### 3. Which scale **does not have absolute zero**, but has **equal spacing**?
-- A) Ratio  
-- B) Ordinal  
-- C) Interval  
-- D) Nominal  
-
----
-
-#### 4. What operations are **allowed** on variables **on an ordinal scale**?
-- A) Mean and standard deviation  
-- B) Mode and Pearson correlation  
-- C) Median and rank tests  
-- D) Quotients and logarithms  
-
----
-
-#### 5. The variable `“class”` in the Titanic set (`First`, `Second`, `Third`) is an example:
-- A) Nominal scale  
-- B) Ratio scale  
-- C) Interval scale  
-- D) Ordinal scale  
-
----
-
-Our solutions:
-1. B - ordinal -> we dont know the spacing between the elements, we can just order/rank the data
-2. C - type of the pokemon -> nominal scale assigns labels to data elements
-3. C - Interval -> for example Celsius scale
-4. C - Median & rank tests -> because we dont know the numerical distances for ordinal data, we cannot calculate for example mean or std
-5. D - Ordinal scale -> we cant do math on them, we can just rank the data, first second and third class
-
-# Descriptive statistics
-
-**Descriptive statistics** deals with the description of the distribution of data in a sample. Descriptive statistics give us basic summary measures about a set of data. Summary measures include measures of central tendency (mean, median and mode) and measures of variability (variance, standard deviation, minimum/maximum values, IQR (interquartile range), skewness and kurtosis).
-
-## This week
-
-Now we're going to look at **describing** our data - as well as the **basics of statistics**.
-
-There are many ways to *describe* a distribution. 
-
-Here we will discuss:
-- Measures of **central tendency**: what is the typical value in this distribution?
-- Measures of **variability**: how much do the values differ from each other?  
-- Measures of **skewness**: how strong is the asymmetry of the distribution?
-- Measures of **curvature**: what is the intensity of extreme values?
-
-
-```python
-import numpy as np
 import matplotlib.pyplot as plt
-import seaborn as sns 
-import scipy.stats as stats
-```
 
-
-```python
-%matplotlib inline 
-%config InlineBackend.figure_format = 'retina'
-```
-
-## Central tendency
-
-The **central tendency** refers to the “typical value” in a distribution.
-
-The **central tendency** refers to the central value that describes the distribution of a variable. It can also be referred to as the center or location of the distribution. The most common measures of central tendency are **average**, **median** and **mode**. The most common measure of central tendency is the **mean**. In the case of skewed distributions or when there is concern about outliers, the **median** may be preferred. The median is thus a more reliable measure than the mean.
-
-There are many ways to *measure* what is “typical” - average:
-
-- Arithmetic mean
-- Median (middle value)
-- Mode (dominant)
-
-### Why is this useful?
-
-- A dataset may contain *many* observations.  
-   - For example, $N$ = $5000$ of survey responses regarding `height'.  
-- One way to “describe” this distribution is to **visualize** it.  
-- But it is also helpful to reduce this distribution to a *single number*.
-
-This is necessarily a **simplification** of our dataset!
-
-### *Arithmetic average*
-
-> **Arithmetic average** is defined as the `sum` of all values in a distribution, divided by the number of observations in that distribution.
-
-
-```python
-numbers = [1, 2, 3, 4]
-### calculating manually...
-sum(numbers)/len(numbers)
-```
-
-
-
-
-    2.5
-
-
-
-- The most common measure of central tendency is the average.
-- The mean is also known as the simple average.
-- It is denoted by the Greek letter $µ$ for a population and $\bar{x}$ for a sample.
-- We can find the average of the number of elements by adding all the elements in the data set and then dividing by the number of elements in the data set.
-- This is the most popular measure of central tendency, but it has a drawback.
-- The average is affected by the presence of outliers.
-- Thus, the average alone is not sufficient for making business decisions.
-
-$$
-\bar{x} = \frac{1}{n} \sum_{i=1}^{n} x_i
-$$
-
-
-
-#### `numpy.mean`
-
-The `numpy` package has a function that calculates an `average` on a `list` or `numpy.ndarray`.
-
-
-```python
-np.mean(numbers)
-```
-
-
-
-
-    np.float64(2.5)
-
-
-
-#### `scipy.stats.tmean`
-
-The [scipy.stats](https://docs.scipy.org/doc/scipy/tutorial/stats.html) library has a variety of statistical functions.
-
-
-```python
-stats.tmean(numbers)
-```
-
-
-
-
-    np.float64(2.5)
-
-
-
-#### Calculating the `average` of a `pandas` column.
-
-If we work with `DataFrame`, we can calculate the `average` of specific columns.
-
-
-```python
-import pandas as pd
-df_gapminder = pd.read_csv("gapminder_full.csv")
-df_gapminder.head(2)
-```
-
-
-
-
-<div>
-<style scoped>
-    .dataframe tbody tr th:only-of-type {
-        vertical-align: middle;
-    }
-
-    .dataframe tbody tr th {
-        vertical-align: top;
-    }
-
-    .dataframe thead th {
-        text-align: right;
-    }
-</style>
-<table border="1" class="dataframe">
-  <thead>
-    <tr style="text-align: right;">
-      <th></th>
-      <th>country</th>
-      <th>year</th>
-      <th>population</th>
-      <th>continent</th>
-      <th>life_exp</th>
-      <th>gdp_cap</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <th>0</th>
-      <td>Afghanistan</td>
-      <td>1952</td>
-      <td>8425333</td>
-      <td>Asia</td>
-      <td>28.801</td>
-      <td>779.445314</td>
-    </tr>
-    <tr>
-      <th>1</th>
-      <td>Afghanistan</td>
-      <td>1957</td>
-      <td>9240934</td>
-      <td>Asia</td>
-      <td>30.332</td>
-      <td>820.853030</td>
-    </tr>
-  </tbody>
-</table>
-</div>
-
-
-
-
-```python
-df_gapminder['life_exp'].mean()
-```
-
-
-
-
-    np.float64(59.474439366197174)
-
-
-
-#### Your turn
-
-How to calculate the mean life expectancy for EUROPEan countries (2007).
-
-
-```python
-### Your code here
-mean_life_expectancy = df_gapminder[(df_gapminder['continent']=='Europe')&(df_gapminder['year']==2007)]['life_exp'].mean()
-print(mean_life_expectancy)
-```
-
-    77.6486
-    
-
-#### *Average* and skewness
-
-> **Skewness** means that there are values *extending* one of the “tails” of the distribution.
-
-Of the measures of **central tendency**, “average” is the most dependent on the direction of skewness.
-
-- How would you describe the following **skewness**?  
-- Do you think the “mean” would be higher or lower than the “median”?
-
-
-```python
-sns.histplot(data = df_gapminder, x = "gdp_cap")
-plt.axvline(df_gapminder['gdp_cap'].mean(), linestyle = "dotted");
-```
-
-
-    
-![png](Exercise8_files/Exercise8_33_0.png)
-    
-
-
-#### Your turn
-
-Is it possible to calculate the average of the column “continent”? Why or why not?
-
-
-```python
-df_gapminder['continent']
-```
-
-
-
-
-    0         Asia
-    1         Asia
-    2         Asia
-    3         Asia
-    4         Asia
-             ...  
-    1699    Africa
-    1700    Africa
-    1701    Africa
-    1702    Africa
-    1703    Africa
-    Name: continent, Length: 1704, dtype: str
-
-
-
-
-```python
-### Your comment here
-#No, it is not. Continent column contains nominal data, so text labels. We cannot calculate the average value, but wa can calculate mode, so the most frequent occuring value
-```
-
-#### Your turn
-
-- Subtract each observation in `numbers` from the `average` of this `list`.  
-- Then calculate the **sum** of these deviations from the `average`.
-
-What is their sum?
-
-
-```python
-import numpy as np
-numbers = np.array([1, 2, 3, 4])
-### Your code here
-mean = np.mean(numbers)
-sum_deviation = np.sum(numbers - mean)
-print(sum_deviation)
-```
-
-    0.0
-    
-
-#### Summary of the first part
-
-- The mean is one of the most common measures of central tendency.  
-- It can only be used for **continuous** interval/ratio data.  
-- The **sum of deviations** from the mean is equal to `0`. 
-- The “mean” is most affected by **skewness** and **outliers**.
-
-### *Median*
-
-> *Median* is calculated by sorting all values from smallest to largest and then finding the value in the middle.
-
-- The median is the number that divides a data set into two equal halves.
-- To calculate the median, we need to sort our data set of n numbers in ascending order.
-- The median of this data set is the number in the position $(n+1)/2$ if $n$ is odd.
-- If n is even, the median is the average of the $(n/2)$ third number and the $(n+2)/2$ third number.
-- The median is robust to outliers.
-- Thus, in the case of skewed distributions or when there is concern about outliers, the median may be preferred.
-
-
-```python
-df_gapminder['gdp_cap'].median()
-```
-
-
-
-
-    np.float64(3531.8469885)
-
-
-
-#### Comparison of `median` and `average`.
-
-The direction of inclination has less effect on the `median`.
-
-
-```python
-sns.histplot(data = df_gapminder, x = "gdp_cap")
-plt.axvline(df_gapminder['gdp_cap'].mean(), linestyle = "dotted", color = "blue")
-plt.axvline(df_gapminder['gdp_cap'].median(), linestyle = "dashed", color = "red");
-```
-
-
-    
-![png](Exercise8_files/Exercise8_43_0.png)
-    
-
-
-#### Your turn
-
-Is it possible to calculate the median of the column “continent”? Why or why not?
-
-
-```python
-### Your comment here
-#No it is not possible. TO calculate the median we have to put the data into the descending or non-descending order, we cannot do that with nominal data
-```
-
-### *Mode*
-
-> **Mode** is the most common value in a data set. 
-
-Unlike `median` or `average`, `mode` can be used with **categorical** data.
-
-
-```python
-df_pokemon = pd.read_csv("pokemon.csv")
-df_pokemon['Type 1'].mode()
-```
-
-
-
-
-    0    Water
-    Name: Type 1, dtype: str
-
-
-
-#### `mode()` returns multiple values?
-
-- If multiple values *bind* for the most frequent one, `mode()` will return them all.
-- This is because technically, a distribution can have multiple values for the most frequent - modal!
-
-
-```python
-df_gapminder['gdp_cap'].mode()
-```
-
-
-
-
-    0          241.165876
-    1          277.551859
-    2          298.846212
-    3          299.850319
-    4          312.188423
-                ...      
-    1699     80894.883260
-    1700     95458.111760
-    1701    108382.352900
-    1702    109347.867000
-    1703    113523.132900
-    Name: gdp_cap, Length: 1704, dtype: float64
-
-
-
-### Measures of central tendency - summary
-
-|Measure|Can be used for:|Limitations|
-|-------|----------------|-----------|
-|Mean|Continuous data|Influence on skewness and outliers|
-|Median|Continuous data|Does not include the *value* of all data points in the calculation (ranks only)|
-|Mode|Continuous and categorical data|Considers only *frequent*; ignores other values|
-
-## Quantiles
-
-**Quantiles** are descriptive - positional statistics that divide an ordered data set into equal parts. The most common quantiles are:
-
-- **Median** (quantile of order 0.5),
-- **Quartiles** (divide the data into 4 parts),
-- **Deciles** (into 10 parts),
-- **Percentiles** (into 100 parts).
-
-### Definition
-
-A quantile of order $q \in (0,1)$ is a value of $x_q$ such that:
-
-$$
-P(X \leq x_q) = q
-$$
-
-In other words: $q \cdot 100\%$ of the values in the data set are less than or equal to $x_q$.
-
-### Formula (for an ordered data set)
-
-For a data sample $x_1, x_2, \ldots, x_n$ ordered in ascending order, the quantile of order $q$ is determined as:
-
-1. Calculate the positional index:
-
-$$
-i = q \cdot (n + 1)
-$$
-
-2. If $i$ is an integer, then the quantile is $x_i$.
-
-3. If $i$ is not integer, we interpolate linearly between adjacent values:
-
-$$
-x_q = x_{\lfloor i \rfloor} + (i - \lfloor i \rfloor) \cdot (x_{\lceil i \rceil} - x_{\lfloor i \rfloor})
-$$
-
-**Note:** In practice, different methods are used to determine quantiles - libraries such as NumPy or Pandas have different modes (e.g. `method='linear'`, `method='midpoint'`).
-
-### Example - we calculate step by step:
-
-For data:
-$
-[3, 7, 8, 5, 12, 14, 21, 13, 18]
-$
-
-1. We arrange the data in ascending order:
-
-$
-[3, 5, 7, 8, 12, 13, 14, 18, 21]
-$
-
-2. Median (quantile of order 0.5):
-
-The number of elements $n = 9$, the middle element is the 5th value:
-
-$
-\text{Median} = x_5 = 12
-$
-
-3. First quartile (Q1, quantile of order 0.25):
-
-$
-i = 0.25 \cdot (9 + 1) = 2.5
-$
-
-Interpolation between $x_2 = 5$ and $x_3 = 7$:
-
-$
-Q_1 = 5 + 0.5 \cdot (7 - 5) = 6
-$
-
-4. Third quartile (Q3, quantile of 0.75):
-
-$
-i = 0.75 \cdot 10 = 7.5
-$
-
-Interpolation between $x_7 = 14$ and $x_8 = 18$:
-
-$
-Q_3 = 14 + 0.5 \cdot (18 - 14) = 16
-$
-
-### Deciles
-
-**Deciles** divide data into 10 equal parts. For example:
-
-- **D1** is the 10th percentile (quantile of 0.1),
-- **D5** is the median (0.5),
-- **D9** is the 90th percentile (0.9).
-
-The formula is the same as for overall quantiles, just use the corresponding $q$. E.g. for D3:
-
-$
-q = \frac{3}{10} = 0.3
-$
-
-### Percentiles
-
-**Percentiles** divide data into 100 equal parts. E.g.:
-
-- **P25** = Q1,
-- **P50** = median,
-- **P75** = Q3,
-- **P90** is the value below which 90% of the data is.
-
-With percentiles, we can better understand the distribution of data - for example, in standardized tests, a score is often given as a percentile (e.g., “85th percentile” means that someone scored better than 85% of the population).
-
----
-
-### Quantiles - summary
-
-| Name     | Symbol | Quantile \( q \) | Meaning                          |
-|-----------|--------|------------------|-------------------------------------|
-| Q1        | Q1     | 0.25             | 25% of data ≤ Q1                     |
-| Median   | Q2     | 0.5              | 50% of data ≤ Median                |
-| Q3        | Q3     | 0.75             | 75% of data ≤ Q3                     |
-| Decile 1   | D1     | 0.1              | 10% of data ≤ D1                     |
-| Decile 9   | D9     | 0.9              | 90% of data ≤ D9                     |
-| Percentile 95 | P95 | 0.95             | 95% of data ≤ P95                    |
-
----
-
-### Example - calculations of quantiles
-
-
-```python
-# Sample data
-mydata = [3, 7, 8, 5, 12, 14, 21, 13, 18]
-mydata_sorted = sorted(mydata)
-print("Sorted data:", mydata_sorted)
-```
-
-    Sorted data: [3, 5, 7, 8, 12, 13, 14, 18, 21]
-    
-
-
-```python
-# Conversion to Pandas Series
-s = pd.Series(mydata)
-
-# Quantiles
-q1 = s.quantile(0.25) # lower quartile Q1
-median = s.quantile(0.5) # median or middle quartile Q2 = Me
-q3 = s.quantile(0.75) # upper quartile Q3
-
-# Deciles
-d1 = s.quantile(0.1) # bottom 10% of data...
-d9 = s.quantile(0.9) # top 10% of data...
-
-# Percentiles
-p95 = s.quantile(0.95)  # top 5% of data...
-
-print("Quantiles:")
-print(f"Q1 (25%): {q1}")
-print(f"Median (50%): {median}")
-print(f"Q3 (75%): {q3}")
-print("\nDeciles:")
-print(f"D1 (10%): {d1}")
-print(f"D9 (90%): {d9}")
-print("\nPercentiles:")
-print(f"P95 (95%): {p95}")
-```
-
-    Quantiles:
-    Q1 (25%): 7.0
-    Median (50%): 12.0
-    Q3 (75%): 14.0
-    
-    Deciles:
-    D1 (10%): 4.6
-    D9 (90%): 18.6
-    
-    Percentiles:
-    P95 (95%): 19.799999999999997
-    
-
-
-```python
-# Create boxplot
-fig, ax = plt.subplots(figsize=(8, 6))
-sns.boxplot(data=mydata, ax=ax, color='lightblue', width=0.3)
-
-# Calculate statistics
-minimum = np.min(mydata)
-q1 = np.percentile(mydata, 25)
-median = np.median(mydata)
-q3 = np.percentile(mydata, 75)
-maximum = np.max(mydata)
-mean = np.mean(mydata)
-
-ax.scatter(0, minimum, color='red', label='Min', zorder=5)
-ax.scatter(0, q1, color='orange', label='Q1 (25th percentile)', zorder=5)
-ax.scatter(0, median, color='green', label='Median (50th percentile)', zorder=5)
-ax.scatter(0, q3, color='purple', label='Q3 (75th percentile)', zorder=5)
-ax.scatter(0, maximum, color='brown', label='Max', zorder=5)
-ax.scatter(0, mean, color='black', marker='D', s=60, label='Mean', zorder=5)
-
-for value, name, color in zip(
-    [minimum, q1, median, mean, q3, maximum],
-    ['Min', 'Q1', 'Median', 'Mean', 'Q3', 'Max'],
-    ['red', 'orange', 'green', 'black', 'purple', 'brown']
-):
-    ax.text(0.1, value, f'{name}: {value:.2f}', verticalalignment='center', color=color)
-
-
-ax.set_title('Boxplot of mydata with All Measures Marked')
-ax.legend(bbox_to_anchor=(1.05, 1), loc='upper left')
+# 1. Calculate correlation between price, rating, and number of reviews
+print("Correlation of variables with price (Airbnb):")
+correlation = airbnb[['price', 'rating', 'reviews_per_month', 'number_of_stays']].corr()
+print(correlation)
+
+# 2. Plot: Relationship between price and rating (Scatterplot)
+plt.figure(figsize=(10, 5))
+sns.scatterplot(x='rating', y='price', data=airbnb, alpha=0.5, color='blue')
+plt.title('Relationship: Price vs Rating (Airbnb)')
+plt.xlabel('Rating')
+plt.ylabel('Price ($)')
+plt.show()
+
+# 3. Plot: Price vs room type (Boxplot)
+plt.figure(figsize=(10, 5))
+sns.boxplot(x='room_type', y='price', data=airbnb, palette='Set2', hue='room_type', legend=False)
+plt.title('Price distribution depending on room type')
+plt.xlabel('Room Type')
+plt.ylabel('Price ($)')
 plt.show()
 ```
 
-
-    
-![png](Exercise8_files/Exercise8_55_0.png)
-    
-
-
-### Your turn!
-
-Try to change the boxplot into the violin plot (or add it). 
-
-Looking at the aforementioned quantile results and the box plot, try to interpret these measures. 
-
-
-```python
-
-```
-
-## Variability
-
-> **Variability** (or **dispersion**) refers to the degree to which values in a distribution are *dispersed*, i.e., differ from each other.
-
-The **dispersion** is an indicator of how far from the center we can find data values. The most common measures of dispersion are **variance**, **standard deviation** and **interquartile range (IQR)**. The **variance** is a standard measure of dispersion. The **standard deviation** is the square root of the variance. The **variance** and **standard deviation** are two useful measures of scatter.
-
-### The `mean` hides the variance!
-
-Both distributions have *the same* mean, but *different* **standard deviations**.
-
-
-```python
-### Let's create some distributions
-d1 = np.random.normal(loc = 0, scale = 1, size = 1000)
-d2 = np.random.normal(loc = 0, scale = 5, size = 1000)
-### Plots
-fig, axes = plt.subplots(1, 2, sharex=True, sharey=True);
-p1 = axes[0].hist(d1, alpha = .5)
-p2 = axes[1].hist(d2, alpha = .5)
-axes[0].set_title("Lower variance");
-axes[1].set_title("Higher variance");
-```
-
-
-    
-![png](Exercise8_files/Exercise8_60_0.png)
+    Correlation of variables with price (Airbnb):
+                          price    rating  reviews_per_month  number_of_stays
+    price              1.000000 -0.004802          -0.057463        -0.048740
+    rating            -0.004802  1.000000           0.013392        -0.002693
+    reviews_per_month -0.057463  0.013392           1.000000         0.586033
+    number_of_stays   -0.048740 -0.002693           0.586033         1.000000
     
 
 
-### Volatility detection
-
-There are at least *three* main approaches to quantifying variability:
-
-- **Range**: the difference between the “maximum” and “minimum” value. 
-- **Interquartile range (IQR)**: The range of the middle 50% of the data.  
-- **Variance** and **Standard Deviation**: the typical value by which results deviate from the mean.
-
-### Range
-
-> **Range** Is the difference between the `maximum` and `minimum` values.
-
-Intuitive, but only considers two values in the entire distribution.
-
-
-```python
-d1.max() - d1.min()
-```
-
-
-
-
-    np.float64(7.273520338036553)
-
-
-
-
-```python
-d2.max() - d2.min()
-```
-
-
-
-
-    np.float64(31.080108056507882)
-
-
-
-### IQR
-
-> The **interquartile range (IQR)** is the difference between a value in the 75% percentile and a value in the 25% percentile.
-
-It focuses on the **center 50%**, but still only considers two values.
-
-- IQR is calculated using the limits of the data between the 1st and 3rd quartiles. 
-- The interquartile range (IQR) can be calculated as follows: $IQR = Q3 - Q1$
-- In the same way that the median is more robust than the mean, the IQR is a more robust measure of scatter than the variance and standard deviation and should therefore be preferred for small or asymmetric distributions. 
-- It is a robust measure of scatter.
-
-
-```python
-## Let's calculate quantiles - quartiles Q1 and Q3
-q3, q1 = np.percentile(d1, [75 ,25])
-q3 - q1
-```
-
-
-
-
-    np.float64(1.2709003372643837)
-
-
-
-
-```python
-## Let's calculate quantiles - quartiles Q1 and Q3
-q3, q1 = np.percentile(d2, [75 ,25])
-q3 - q1
-```
-
-
-
-
-    np.float64(7.07831500525432)
-
-
-
-### Variance and standard deviation.
-
-The **Variance** measures the dispersion of a set of data points around their mean value. It is the average of the squares of the individual deviations. The variance gives the results in original units squared.
-
-$$
-s^2 = \frac{1}{n - 1} \sum_{i=1}^{n} (x_i - \bar{x})^2
-$$
-
-**Standard deviation (SD)** measures the *typical value* by which the results in the distribution deviate from the mean.
-
-$$
-s = \sqrt{s^2} = \sqrt{\frac{1}{n - 1} \sum_{i=1}^{n} (x_i - \bar{x})^2}
-$$
-
-where:
-	- $n$ - the number of elements in the sample
-	- $\bar{x}$ - the arithmetic mean of the sample
-
-What to keep in mind:
-
-- SD is the *square root* of [variance](https://en.wikipedia.org/wiki/Variance).  
-- There are actually *two* measures of SD:
- - SD of a population: when you measure the entire population of interest (very rare).  
-   - SD of a sample: when you measure a *sample* (typical case); we'll focus on that.
-
-#### SD, explained
-
-- First, calculate the total *square deviation*.
-   - What is the total square deviation from the “mean”? 
-- Then divide by `n - 1`: normalize to the number of observations.
-   - What is the *average* squared deviation from the `average'?
-- Finally, take the *square root*:
-   - What is the *average* deviation from the “mean”?
-
-The **standard deviation** represents the *typical* or “average” deviation from the “mean”.
-
-#### SD calculation in `pandas`
-
-
-```python
-df_pokemon['Attack'].std()
-```
-
-
-
-
-    np.float64(32.45736586949845)
-
-
-
-
-```python
-df_pokemon['HP'].std()
-```
-
-
-
-
-    np.float64(25.53466903233207)
-
-
-
-#### Note on `numpy.std`!!!
-
-- By default, `numpy.std` calculates the **population standard deviation**!  
-- You need to modify the `ddof` parameter to calculate the **sample standard deviation**.
-
-This is a very common error.
-
-
-```python
-### SD in population
-d1.std()
-```
-
-
-
-
-    np.float64(0.9813312813888081)
-
-
-
-
-```python
-### SD for sample
-d1.std(ddof = 1)
-```
-
-
-
-
-    np.float64(0.9818223153356677)
-
-
-
-### Coefficient of variation (CV).
-
-- The coefficient of variation (CV) is equal to the standard deviation divided by the mean.
-- It is also known as “relative standard deviation.”
-
-$$
-CV = \frac{s}{\bar{x}} \cdot 100%
-$$
-
-
-```python
-X = [2, 4, 4, 4, 5, 5, 7, 9]
-mean = np.mean(X)
-
-# Variance and standard deviation from scipy (for the sample!):
-var_sample = stats.tvar(X)      # sample variance
-std_sample = stats.tstd(X)      # sample sd
-
-# CV (for sample):
-cv_sample = (std_sample / mean) * 100
-
-print(f"Mean: {mean}")
-print(f"Sample variance (scipy): {var_sample}")
-print(f"Sample sd (scipy): {std_sample}")
-print(f"CV (scipy): {cv_sample:.2f}%")
-```
-
-    Mean: 5.0
-    Sample variance (scipy): 4.571428571428571
-    Sample sd (scipy): 2.138089935299395
-    CV (scipy): 42.76%
     
-
-## Interquartile deviation
-
-Interquartile deviation (sometimes called the semi-interquartile range) is defined as half of the interquartile range:
-
-$$ \text{IQR deviation} = \frac{Q3 - Q1}{2} $$
-
-This value shows the average distance from the median to the quartiles and is a robust measure of variability.
-
-- A small interquartile deviation means the middle 50% of the data are close to the median.
-- A large interquartile deviation means the middle 50% are more spread out.
-
-It is less sensitive to outliers than the standard deviation or range!
-
-# Your turn!
-
-Calculate STD and CV for the SPEED of LEGENDARY and NOT LEGENDARY pokemons. What is the IQR deviation? 
-
-
-```python
-grouped_speed = df_pokemon.groupby('Legendary')['Speed']
-
-def calculate_cv(x):
-    return (x.std() / x.mean()) * 100
-
-def calculate_iqr_deviation(x):
-    return (x.quantile(0.75) - x.quantile(0.25)) / 2
-
-speed_stats = grouped_speed.agg(
-    Mean='mean',
-    Standard_Deviation='std',
-    CV_Percentage=calculate_cv,
-    IQR_Deviation=calculate_iqr_deviation
-)
-
-print(speed_stats)
-```
-
-                     Mean  Standard_Deviation  CV_Percentage  IQR_Deviation
-    Legendary                                                              
-    False       65.455782           27.843038      42.537171           20.0
-    True       100.184615           22.952323      22.910028           10.0
-    
-
-## Measures of the shape of the distribution
-
-Now we will look at measures of the shape of the distribution. There are two statistical measures that can tell us about the shape of a distribution. These are **skewness** and **curvature**. These measures can be used to tell us about the shape of the distribution of a data set.
-
-## Skewness
-- **Skewness** is a measure of the symmetry of a distribution, or more precisely, the lack of symmetry. 
-- It is used to determine the lack of symmetry with respect to the mean of a data set. 
-- It is a characteristic of deviation from the mean. 
-- It is used to indicate the shape of a data distribution.
-
-Skewness is a measure of the asymmetry of the distribution of data relative to the mean. It tells us whether the data are more ‘stretched’ to one side.
-
-Interpretation:
-
-- Skewness > 0 - right-tailed (positive): long tail on the right (larger values are more dispersed)
-- Skewness < 0 - left (negative): long tail on the left (smaller values are more dispersed)
-- Skewness ≈ 0 - symmetric distribution (e.g. normal distribution)
-
-Formula (for the sample):
-
-$$
-A = \frac{n}{(n-1)(n-2)} \sum_{i=1}^{n} \left( \frac{x_i - \bar{x}}{s} \right)^3
-$$
-
-where:
-- $n$ - number of observations
-- $\bar{x}$ - sample mean
-- $s$ - standard deviation of the sample
-
-![title](img/skew.png)
-
-
-#### Negative skewness
-
-- In this case, the data are skewed or shifted to the left. 
-- By skewed to the left, we mean that the left tail is long relative to the right tail. 
-- The data values may extend further to the left, but are concentrated on the right. 
-- So we are dealing with a long tail, and the distortion is caused by very small values that pull the mean down and it is smaller than the median. 
-- In this case we have **Mean < Median < Mode**.
-      
-
-#### Zero skewness
-
-- This means that the dataset is symmetric. 
-- A dataset is symmetric if it looks the same to the left and right of the midpoint. 
-- A dataset is bell-shaped or symmetric. 
-- A perfectly symmetrical dataset will have a skewness of zero. 
-- So a normal distribution that is perfectly symmetric has a skewness of 0. 
-- In this case we have **Mean = Median = Mode**.
-      
-
-#### Positive skewness
-
-- The dataset is skewed or shifted to the right. 
-- By skewed to the right we mean that the right tail is long relative to the left tail. 
-- The data values are concentrated on the right side. 
-- There is a long tail on the right side, which is caused by very large values that pull the mean upwards and it is larger than the median. 
-- So we have **Mean > Median > Mode**.
-
-
-```python
-from scipy.stats import skew
-X = [2, 4, 4, 4, 5, 5, 7, 9]
-skewness = skew(X)
-print(f"Skewness of X: {skewness:.4f}")
-```
-
-    Skewness of X: 0.6562
-    
-
-### Your turn
-
-Try to interpret the above-mentioned result and calculate example slant ratios for several groups of Pokémon.
-
-
-```python
-# INTERPRETATION OF THE RESULT FROM CELL 86:
-# The sample skewness for the dataset X is approximately 0.656. Since this value is greater than 0,
-# it indicates a right-skewed distribution. This means most data points are clustered on the lower end, with a longer tail stretching towards the higher values on the right.
-
-
-pokemon_skew = df_pokemon.groupby('Type 1')['Attack'].skew()
-print("Skewness of Attack points across different Pokémon types:")
-print(pokemon_skew)
-```
-
-    Skewness of Attack points across different Pokémon types:
-    Type 1
-    Bug         0.815756
-    Dark        0.565949
-    Dragon      0.198652
-    Electric    0.621533
-    Fairy       1.055304
-    Fighting   -0.427173
-    Fire        0.350478
-    Flying     -0.749630
-    Ghost       0.915441
-    Grass       0.162911
-    Ground      0.599645
-    Ice         0.633671
-    Normal      0.368517
-    Poison     -0.005292
-    Psychic     1.158986
-    Rock        0.256045
-    Steel       0.056582
-    Water       0.445246
-    Name: Attack, dtype: float64
-    
-
-### Interquartile Skewness
-
-**IQR skewness** is a robust, non-parametric measure of skewness that uses the positions of the quartiles rather than the mean and standard deviation. It is particularly useful for detecting asymmetry in data distributions, especially when outliers are present.
-
-The formula for IQR Skewness is:
-
-$$
-IQR\ Skewness = \frac{(Q3 - Median) - (Median - Q1)}{Q3 - Q1}
-$$
-This method is **less sensitive to outliers** and more **robust** than moment-based skewness, making it ideal for exploratory data analysis.
-
-### Your turn
-
-Try to calculate the IQR Skewness coefficient for the sample data:
-
-
-```python
-mydata = [3, 7, 8, 5, 12, 14, 21, 13, 18]
-
-s = pd.Series(mydata)
-
-q1 = s.quantile(0.25)
-median = s.median()
-q3 = s.quantile(0.75)
-iqr_skewness = ((q3 - median) - (median - q1)) / (q3 - q1)
-
-print(f"Quartile 1 (Q1): {q1}")
-print(f"Median (Q2): {median}")
-print(f"Quartile 3 (Q3): {q3}")
-print(f"IQR Skewness Coefficient: {iqr_skewness:.4f}")
-```
-
-    Quartile 1 (Q1): 7.0
-    Median (Q2): 12.0
-    Quartile 3 (Q3): 14.0
-    IQR Skewness Coefficient: -0.4286
-    
-
-## Kurtosis
-
-Contrary to what some textbooks claim, kurtosis does not measure the ‘flattening’, the ‘peaking’ of a distribution.
-
-> **Kurtosis** depends on the intensity of the extremes, so it measures what happens in the ‘tails’ of the distribution, the shape of the ‘top’ is irrelevant!
-
-**Excess kurtosis** is just kurtosis minus 3. It’s used to compare a distribution to the normal distribution (which has kurtosis = 3).
-
-
-Sample kurtosis:
-
-$$
-\text{Kurtosis} = \frac{1}{n} \sum_{i=1}^{n} \left( \frac{x_i - \bar{x}}{s} \right)^4
-$$
-
-$$
-\text{Normalized kurtosis} = \text{Kurtosis} - 3
-$$
-
-#### Reference range for kurtosis
-- The reference standard is the normal distribution, which has a kurtosis of 3. 
-- Often **Excess** is presented instead of kurtosis, where **excess** is simply **Kurtosis - 3**. 
-
-#### Mesocurve
-- A normal distribution has a kurtosis of exactly 3 (**Excess** exactly 0). 
-- Any distribution with kurtosis $≈3$ (exces ≈ 0) is called **mezocurtic**.
-
-#### Platykurtic curve
-- A distribution with kurtosis $<3$ (**Excess** < 0) is called **platykurtic**. 
-- Compared to a normal distribution, its central peak is lower and wider and its tails are shorter and thinner.
-
-#### Leptokurtic curve
-
-- A distribution with kurtosis $>3$ (**Excess** > 0) is called **leptocurtic**. 
-- Compared to a normal distribution, its central peak is higher and sharper and its tails are longer and thicker.
-
-![title](img/ku.png)
-
-So:
-- Excess Kurtosis ≈ 0 → Normal distribution
-- Excess Kurtosis > 0 → Leptokurtic (heavy tails)
-- Excess Kurtosis < 0 → Platykurtic (light tails)
-
-
-```python
-from scipy.stats import kurtosis
-import numpy as np
-
-data = np.array([2, 8, 0, 4, 1, 9, 9, 0])
-
-# By default, it returns excess kurtosis
-excess_kurt = kurtosis(data)
-print("Excess Kurtosis:", excess_kurt)
-
-# To get regular kurtosis (not excess), set fisher=False
-regular_kurt = kurtosis(data, fisher=False)
-print("Regular Kurtosis:", regular_kurt)
-```
-
-    Excess Kurtosis: -1.6660010752838508
-    Regular Kurtosis: 1.3339989247161492
-    
-
-### Interquartile Kurtosis
-
-**IQR Kurtosis** is a robust, non-parametric measure of kurtosis that focuses on the tails of the distribution using interquartile ranges. It is particularly useful for detecting the intensity of extreme values in data distributions, especially when outliers are present.
-
-The formula for IQR Kurtosis is:
-
-$$
-IQR\ Kurtosis = \frac{Q3 - Q1}{2*(C90 - C10)}
-$$
-
-Where:
-- $Q1$ is the first quartile (25th percentile),
-- $Q3$ is the third quartile (75th percentile),
-- $C90$ is the 90th percentile,
-- $C10$ is the 10th percentile.
-
-**Interpretation**:
-
-IQR Kurtosis differs from traditional kurtosis in its interpretation. While traditional kurtosis focuses on the intensity of the tails of a distribution (e.g., heavy or light tails), IQR Kurtosis is a robust measure that emphasizes the relative spread of the interquartile range (IQR) and the symmetry of the distribution around the median.
-
-### Your turn
-
-Try to calculate the IQR Kurtosis coefficient for the sample data:
-
-
-```python
-mydata = [3, 7, 8, 5, 12, 14, 21, 13, 18]
-s = pd.Series(mydata)
-q1 = s.quantile(0.25)
-q3 = s.quantile(0.75)
-c10 = s.quantile(0.10)
-c90 = s.quantile(0.90)
-
-iqr_kurtosis = (q3 - q1) / (2 * (c90 - c10))
-
-print(f"Q1: {q1}, Q3: {q3}")
-print(f"C10: {c10}, C90: {c90}")
-print(f"IQR Kurtosis Coefficient: {iqr_kurtosis:.4f}")
-```
-
-    Q1: 7.0, Q3: 14.0
-    C10: 4.6, C90: 18.6
-    IQR Kurtosis Coefficient: 0.2500
-    
-
-## Summary statistics
-
-A great tool for creating elegant summaries of descriptive statistics in Markdown format (ideal for Jupyter Notebooks) is pandas, especially in combination with the .describe() function and tabulate.
-
-Example with pandas + tabulate (a nice table in Markdown):
-
-
-```python
-from scipy.stats import skew, kurtosis
-from tabulate import tabulate
-
-def markdown_summary(df, round_decimals=3):
-    summary = df.describe().T  # transpose so that the variables are in rows
-    # Add skewness and kurtosis
-    summary['Skewness'] = df.skew()
-    summary['Kurtosis'] = df.kurt()
-    # Rounding up the results
-    summary = summary.round(round_decimals)
-    # Nice summary table!
-    return tabulate(summary, headers='keys', tablefmt='github')
-```
-
-
-```python
-# We select only the numerical columns for analysis:
-quantitative = df_pokemon.select_dtypes(include='number')
-
-# We use our function:
-print(markdown_summary(quantitative))
-```
-
-    |            |   count |    mean |     std |   min |    25% |   50% |    75% |   max |   Skewness |   Kurtosis |
-    |------------|---------|---------|---------|-------|--------|-------|--------|-------|------------|------------|
-    | #          |     800 | 362.814 | 208.344 |     1 | 184.75 | 364.5 | 539.25 |   721 |     -0.001 |     -1.166 |
-    | Total      |     800 | 435.102 | 119.963 |   180 | 330    | 450   | 515    |   780 |      0.153 |     -0.507 |
-    | HP         |     800 |  69.259 |  25.535 |     1 |  50    |  65   |  80    |   255 |      1.568 |      7.232 |
-    | Attack     |     800 |  79.001 |  32.457 |     5 |  55    |  75   | 100    |   190 |      0.552 |      0.17  |
-    | Defense    |     800 |  73.842 |  31.184 |     5 |  50    |  70   |  90    |   230 |      1.156 |      2.726 |
-    | Sp. Atk    |     800 |  72.82  |  32.722 |    10 |  49.75 |  65   |  95    |   194 |      0.745 |      0.298 |
-    | Sp. Def    |     800 |  71.902 |  27.829 |    20 |  50    |  70   |  90    |   230 |      0.854 |      1.628 |
-    | Speed      |     800 |  68.278 |  29.06  |     5 |  45    |  65   |  90    |   180 |      0.358 |     -0.236 |
-    | Generation |     800 |   3.324 |   1.661 |     1 |   2    |   3   |   5    |     6 |      0.014 |     -1.24  |
-    
-
-To make a summary table cross-sectionally (i.e. **by group**), you need to use the groupby() method on the DataFrame and then, for example, describe() or your own aggregate function. 
-
-Let's say you want to group the data by the ‘Type 1’ column (i.e. e.g. Pokémon type: Fire, Water, etc.) and then summarise the quantitative variables (mean, variance, min, max, etc.).
-
-
-```python
-# Grouping by ‘Type 1’ column and statistical summary of numeric columns:
-group_summary = df_pokemon.groupby('Type 1')[quantitative.columns].describe()
-print(group_summary)
-```
-
-                  #                                                               \
-              count        mean         std    min     25%    50%     75%    max   
-    Type 1                                                                         
-    Bug        69.0  334.492754  210.445160   10.0  168.00  291.0  543.00  666.0   
-    Dark       31.0  461.354839  176.022072  197.0  282.00  509.0  627.00  717.0   
-    Dragon     32.0  474.375000  170.190169  147.0  373.00  443.5  643.25  718.0   
-    Electric   44.0  363.500000  202.731063   25.0  179.75  403.5  489.75  702.0   
-    Fairy      17.0  449.529412  271.983942   35.0  176.00  669.0  683.00  716.0   
-    Fighting   27.0  363.851852  218.565200   56.0  171.50  308.0  536.00  701.0   
-    Fire       52.0  327.403846  226.262840    4.0  143.50  289.5  513.25  721.0   
-    Flying      4.0  677.750000   42.437209  641.0  641.00  677.5  714.25  715.0   
-    Ghost      32.0  486.500000  209.189218   92.0  354.75  487.0  709.25  711.0   
-    Grass      70.0  344.871429  200.264385    1.0  187.25  372.0  496.75  673.0   
-    Ground     32.0  356.281250  204.899855   27.0  183.25  363.5  535.25  645.0   
-    Ice        24.0  423.541667  175.465834  124.0  330.25  371.5  583.25  713.0   
-    Normal     98.0  319.173469  193.854820   16.0  161.25  296.5  483.00  676.0   
-    Poison     28.0  251.785714  228.801767   23.0   33.75  139.5  451.25  691.0   
-    Psychic    57.0  380.807018  194.600455   63.0  201.00  386.0  528.00  720.0   
-    Rock       44.0  392.727273  213.746140   74.0  230.75  362.5  566.25  719.0   
-    Steel      27.0  442.851852  164.847180  208.0  305.50  379.0  600.50  707.0   
-    Water     112.0  303.089286  188.440807    7.0  130.00  275.0  456.25  693.0   
-    
-              Total              ...   Speed        Generation            \
-              count        mean  ...     75%    max      count      mean   
-    Type 1                       ...                                       
-    Bug        69.0  378.927536  ...   85.00  160.0       69.0  3.217391   
-    Dark       31.0  445.741935  ...   98.50  125.0       31.0  4.032258   
-    Dragon     32.0  550.531250  ...   97.75  120.0       32.0  3.875000   
-    Electric   44.0  443.409091  ...  101.50  140.0       44.0  3.272727   
-    Fairy      17.0  413.176471  ...   60.00   99.0       17.0  4.117647   
-    Fighting   27.0  416.444444  ...   86.00  118.0       27.0  3.370370   
-    Fire       52.0  458.076923  ...   96.25  126.0       52.0  3.211538   
-    Flying      4.0  485.000000  ...  121.50  123.0        4.0  5.500000   
-    Ghost      32.0  439.562500  ...   84.25  130.0       32.0  4.187500   
-    Grass      70.0  421.142857  ...   80.00  145.0       70.0  3.357143   
-    Ground     32.0  437.500000  ...   90.00  120.0       32.0  3.156250   
-    Ice        24.0  433.458333  ...   80.00  110.0       24.0  3.541667   
-    Normal     98.0  401.683673  ...   90.75  135.0       98.0  3.051020   
-    Poison     28.0  399.142857  ...   77.00  130.0       28.0  2.535714   
-    Psychic    57.0  475.947368  ...  104.00  180.0       57.0  3.385965   
-    Rock       44.0  453.750000  ...   70.00  150.0       44.0  3.454545   
-    Steel      27.0  487.703704  ...   70.00  110.0       27.0  3.851852   
-    Water     112.0  430.455357  ...   82.00  122.0      112.0  2.857143   
-    
-                                                   
-                   std  min   25%  50%   75%  max  
-    Type 1                                         
-    Bug       1.598433  1.0  2.00  3.0  5.00  6.0  
-    Dark      1.353609  2.0  3.00  5.0  5.00  6.0  
-    Dragon    1.431219  1.0  3.00  4.0  5.00  6.0  
-    Electric  1.604697  1.0  2.00  4.0  4.25  6.0  
-    Fairy     2.147160  1.0  2.00  6.0  6.00  6.0  
-    Fighting  1.800601  1.0  1.50  3.0  5.00  6.0  
-    Fire      1.850665  1.0  1.00  3.0  5.00  6.0  
-    Flying    0.577350  5.0  5.00  5.5  6.00  6.0  
-    Ghost     1.693203  1.0  3.00  4.0  6.00  6.0  
-    Grass     1.579173  1.0  2.00  3.5  5.00  6.0  
-    Ground    1.588454  1.0  1.75  3.0  5.00  5.0  
-    Ice       1.473805  1.0  2.75  3.0  5.00  6.0  
-    Normal    1.575407  1.0  2.00  3.0  4.00  6.0  
-    Poison    1.752927  1.0  1.00  1.5  4.00  6.0  
-    Psychic   1.644845  1.0  2.00  3.0  5.00  6.0  
-    Rock      1.848375  1.0  2.00  3.0  5.00  6.0  
-    Steel     1.350319  2.0  3.00  3.0  5.00  6.0  
-    Water     1.558800  1.0  1.00  3.0  4.00  6.0  
-    
-    [18 rows x 72 columns]
-    
-
-## Cross-sectional analysis
-
-Let's try to calculate all those statistics by group i.e. perform descriptive analysis for Attack points by Legendary (for legendary and not legendary pokemons.)
-
-
-```python
-grouped_attack = df_pokemon.groupby('Legendary')['Attack']
-grouped_summary = grouped_attack.describe()
-# let's add skewness and kurtosis now:
-grouped_summary['Skewness'] = grouped_attack.apply(lambda x: x.skew())
-grouped_summary['Kurtosis'] = grouped_attack.apply(lambda x: x.kurt())
-from tabulate import tabulate
-print(tabulate(grouped_summary, headers='keys', tablefmt='github'))  #summary in markdown table now
-```
-
-    | Legendary   |   count |     mean |     std |   min |   25% |   50% |   75% |   max |   Skewness |   Kurtosis |
-    |-------------|---------|----------|---------|-------|-------|-------|-------|-------|------------|------------|
-    | False       |     735 |  75.6694 | 30.4902 |     5 |  54.5 |    72 |    95 |   185 |   0.523333 |   0.145037 |
-    | True        |      65 | 116.677  | 30.348  |    50 | 100   |   110 |   131 |   190 |   0.50957  |  -0.18957  |
-    
-
-### Your turn!
-
-Add some cross-sectional plots and try to interpret the results.
-
-
-```python
-import matplotlib.pyplot as plt
-import seaborn as sns
-
-fig, axes = plt.subplots(1, 2, figsize=(14, 6))
-
-sns.boxplot(
-    ax=axes[0],
-    x='Legendary',
-    y='Attack',
-    data=df_pokemon,
-    palette='Set2',
-    hue='Legendary',
-    legend=False
-)
-axes[0].set_title('Distribution of Attack Points (Boxplot)')
-axes[0].set_xlabel('Is the Pokémon Legendary?')
-axes[0].set_ylabel('Attack')
-
-sns.kdeplot(
-    ax=axes[1],
-    data=df_pokemon,
-    x='Attack',
-    hue='Legendary',
-    fill=True,
-    common_norm=False,
-    palette='Set2'
-)
-axes[1].set_title('Density Distribution of Attack Points (KDE)')
-axes[1].set_xlabel('Attack')
-axes[1].set_ylabel('Density')
-
-plt.tight_layout()
-plt.show()
-```
-
-
-    
-![png](Exercise8_files/Exercise8_107_0.png)
+![png](Cleaning_Data_in_Python_live_session_files/Cleaning_Data_in_Python_live_session_150_1.png)
     
 
 
-Boxplot:
 
-The boxplot shows that Legendary Pokémon have a substantially higher median Attack level than non-Legendary Pokémon.
-The middle 50% of the data for Legendary Pokémon is shifted upward—their lower quartile ($Q_1$) which almost perfectly aligns with the upper quartile ($Q_3$) of non-Legendary Pokémon.
-
-KDE Plot:
-
-Non-Legendary Pokémon have a unimodal distribution peaking sharply around 60–80 points with slight right-skewness.
-The Legendary group displays a much broader, flatter distribution shifted far to the right, peaking near 100–130 Attack points.
-
-### Quiz answers on measurement scales:
-1. B  
-2. C  
-3. C  
-4. C  
-5. D
+    
+![png](Cleaning_Data_in_Python_live_session_files/Cleaning_Data_in_Python_live_session_150_2.png)
+    
 
 
-# Exercise9.ipynb report just in case
+
+```python
+import statsmodels.api as sm
+
+# Data preparation
+model_data = airbnb[['price', 'rating', 'number_of_stays']].dropna()
+
+# Independent variables (X) and dependent variable (y - what we want to predict)
+X = model_data[['rating', 'number_of_stays']]
+y = model_data['price']
+
+# Add a constant (intercept)
+X = sm.add_constant(X)
+
+# Training the linear regression model (OLS)
+model = sm.OLS(y, X).fit()
+
+# Display the model summary
+print(model.summary())
+```
+
+                                OLS Regression Results                            
+    ==============================================================================
+    Dep. Variable:                  price   R-squared:                       0.001
+    Model:                            OLS   Adj. R-squared:                  0.001
+    Method:                 Least Squares   F-statistic:                     4.293
+    Date:                Sun, 07 Jun 2026   Prob (F-statistic):             0.0137
+    Time:                        16:42:15   Log-Likelihood:                -51027.
+    No. Observations:                7836   AIC:                         1.021e+05
+    Df Residuals:                    7833   BIC:                         1.021e+05
+    Df Model:                           2                                         
+    Covariance Type:            nonrobust                                         
+    ===================================================================================
+                          coef    std err          t      P>|t|      [0.025      0.975]
+    -----------------------------------------------------------------------------------
+    const             148.1610     13.035     11.366      0.000     122.609     173.713
+    rating             -1.3871      3.203     -0.433      0.665      -7.665       4.891
+    number_of_stays    -0.0949      0.033     -2.899      0.004      -0.159      -0.031
+    ==============================================================================
+    Omnibus:                    17404.247   Durbin-Watson:                   1.920
+    Prob(Omnibus):                  0.000   Jarque-Bera (JB):        214884953.767
+    Skew:                          20.169   Prob(JB):                         0.00
+    Kurtosis:                     813.259   Cond. No.                         479.
+    ==============================================================================
+    
+    Notes:
+    [1] Standard Errors assume that the covariance matrix of the errors is correctly specified.
+    
+
+### My Conclusions (Bivariate Analysis & Regression Model)
+
+1. Plots and Correlations:
+1. Looking at the boxplot, it's pretty clear that booking an `Entire place` is the most expensive option and has the biggest price differences. On the other hand, a `Shared room` is the cheapest.
+2. The correlation table shows that the `rating` and `price` are not really connected (the correlation is very weak). It seems that on Airbnb, the type of room matters much more for the price than how good the reviews are.
+
+2. Regression Model (StatsModels):
+1. Just like in Exercise 10, I built a simple linear regression model. I tried to predict the `price` using `rating` and `number_of_stays`.
+2. The results show a very low R-squared value. This means our simple model isn't very good at predicting the exact price. It makes sense because Airbnb prices probably depend on many other things we didn't include here, like exact location, photos, or standard, so a simple model is just not enough for this specific dataset.
+
+
+# Exercise10.ipynb 
 
 ---
-title: Bivariate Statistics
+title: Multivariate Statistics
 subtitle: Foundations of Statistical Analysis in Python
-abstract: This notebook explores bivariate relationships through linear correlations, highlighting their strengths and limitations. Practical examples and visualizations are provided to help users understand and apply these statistical concepts effectively.
+abstract: This notebook explores multivariate relationships through linear regression analysis, highlighting its strengths and limitations. Practical examples and visualizations are provided to help users understand and apply these statistical concepts effectively.
 author:
   - name: Karol Flisikowski
-    affiliations: 
+    affiliations:
       - Gdansk University of Technology
       - Chongqing Technology and Business University
     orcid: 0000-0002-4160-1297
     email: karol@ctbu.edu.cn
-date: 2025-05-03
+date: 2025-05-25
 ---
 
 ## Goals of this lecture
 
-There are many ways to *describe* a distribution. 
+There are many ways to *describe* a distribution.
 
 Here we will discuss:
-- Measurement of the relationship between distributions using **linear, rank correlations**.
-- Measurement of the relationship between qualitative variables using **contingency**.
+- Measurement of the relationship between distributions using **linear, regression analysis**.
 
 ## Importing relevant libraries
 
@@ -5370,31 +3861,15 @@ import scipy.stats as ss
 
 
 ```python
-%matplotlib inline 
+%matplotlib inline
 %config InlineBackend.figure_format = 'retina'
 ```
 
 
 ```python
 import pandas as pd
-df_pokemon = pd.read_csv("pokemon.csv")
-```
-
-## Describing *bivariate* data with correlations
-
-- So far, we've been focusing on *univariate data*: a single distribution.
-- What if we want to describe how *two distributions* relate to each other?
-   - For today, we'll focus on *continuous distributions*.
-
-### Bivariate relationships: `height`
-
-- A classic example of **continuous bivariate data** is the `height` of a `parent` and `child`.  
-- [These data were famously collected by Karl Pearson](https://www.kaggle.com/datasets/abhilash04/fathersandsonheight).
-
-
-```python
-df_height = pd.read_csv("height.csv")
-df_height.head(2)
+df_estate = pd.read_csv("real_estate.csv")
+df_estate.head(5)
 ```
 
 
@@ -5418,848 +3893,277 @@ df_height.head(2)
   <thead>
     <tr style="text-align: right;">
       <th></th>
-      <th>Father</th>
-      <th>Son</th>
+      <th>No</th>
+      <th>house age</th>
+      <th>distance to the nearest MRT station</th>
+      <th>number of convenience stores</th>
+      <th>latitude</th>
+      <th>longitude</th>
+      <th>house price of unit area</th>
     </tr>
   </thead>
   <tbody>
     <tr>
       <th>0</th>
-      <td>65.0</td>
-      <td>59.8</td>
-    </tr>
-    <tr>
-      <th>1</th>
-      <td>63.3</td>
-      <td>63.2</td>
-    </tr>
-  </tbody>
-</table>
-</div>
-
-
-
-#### Plotting Pearson's height data
-
-
-```python
-sns.scatterplot(data = df_height, x = "Father", y = "Son", alpha = .5);
-```
-
-
-    
-![png](Exercise9_files/Exercise9_10_0.png)
-    
-
-
-### Introducing linear correlations
-
-> A **correlation coefficient** is a number between $[–1, 1]$ that describes the relationship between a pair of variables.
-
-Specifically, **Pearson's correlation coefficient** (or Pearson's $r$) describes a (presumed) *linear* relationship.
-
-Two key properties:
-
-- **Sign**: whether a relationship is positive (+) or negative (–).  
-- **Magnitude**: the strength of the linear relationship.
-
-$$
-r = \frac{ \sum_{i=1}^{n} (x_i - \bar{x})(y_i - \bar{y}) }{ \sqrt{ \sum_{i=1}^{n} (x_i - \bar{x})^2 } \sqrt{ \sum_{i=1}^{n} (y_i - \bar{y})^2 } }
-$$
-
-Where:
-- $r$ - Pearson correlation coefficient
-- $x_i$, $y_i$ - values of the variables
-- $\bar{x}$, $\bar{y}$ - arithmetic means
-- $n$ - number of observations
-
-Pearson's correlation coefficient measures the strength and direction of the linear relationship between two continuous variables. Its value ranges from -1 to 1:
-- 1 → perfect positive linear correlation
-- 0 → no linear correlation
-- -1 → perfect negative linear correlation
-
-This coefficient does not tell about nonlinear correlations and is sensitive to outliers.
-
-### Calculating Pearson's $r$ with `scipy`
-
-`scipy.stats` has a function called `pearsonr`, which will calculate this relationship for you.
-
-Returns two numbers:
-
-- $r$: the correlation coefficent.  
-- $p$: the **p-value** of this correlation coefficient, i.e., whether it's *significantly different* from `0`.
-
-
-```python
-ss.pearsonr(df_height['Father'], df_height['Son'])
-```
-
-
-
-
-    PearsonRResult(statistic=np.float64(0.5011626808075912), pvalue=np.float64(1.272927574366214e-69))
-
-
-
-    #### Check-in
-
-Using `scipy.stats.pearsonr` (here, `ss.pearsonr`), calculate Pearson's $r$ for the relationship between the `Attack` and `Defense` of Pokemon.
-
-- Is this relationship positive or negative?  
-- How strong is this relationship?
-
-
-```python
-#Calculated correlation is 0.438. It means that the correlation is positive but it is not strong its restrained (umiarkowany). Pokemons with high attack normally have also pretty good defence skills but there are many exceptions in the game.
-```
-
-#### Solution
-
-
-```python
-ss.pearsonr(df_pokemon['Attack'], df_pokemon['Defense'])
-```
-
-
-
-
-    PearsonRResult(statistic=np.float64(0.4386870551184896), pvalue=np.float64(5.858479864289521e-39))
-
-
-
-#### Check-in
-
-Pearson'r $r$ measures the *linear correlation* between two variables. Can anyone think of potential limitations to this approach?
-
-### Limitations of Pearson's $r$
-
-- Pearson's $r$ *presumes* a linear relationship and tries to quantify its strength and direction.  
-- But many relationships are **non-linear**!  
-- Unless we visualize our data, relying only on Pearson'r $r$ could mislead us.
-
-#### Non-linear data where $r = 0$
-
-
-```python
-x = np.arange(1, 40)
-y = np.sin(x)
-p = sns.lineplot(x = x, y = y)
-```
-
-
-    
-![png](Exercise9_files/Exercise9_23_0.png)
-    
-
-
-
-```python
-### r is close to 0, despite there being a clear relationship!
-ss.pearsonr(x, y)
-```
-
-
-
-
-    PearsonRResult(statistic=np.float64(-0.04067793461845848), pvalue=np.float64(0.8057827185936625))
-
-
-
-#### When $r$ is invariant to the real relationship
-
-All these datasets have roughly the same **correlation coefficient**.
-
-
-```python
-df_anscombe = sns.load_dataset("anscombe")
-sns.relplot(data = df_anscombe, x = "x", y = "y", col = "dataset");
-```
-
-
-    
-![png](Exercise9_files/Exercise9_26_0.png)
-    
-
-
-
-```python
-# Compute correlation matrix
-corr = df_pokemon.corr(numeric_only=True)
-
-# Set up the matplotlib figure
-plt.figure(figsize=(10, 8))
-
-# Create a heatmap
-sns.heatmap(corr, 
-            annot=True,         # Show correlation coefficients
-            fmt=".2f",          # Format for coefficients
-            cmap="coolwarm",    # Color palette
-            vmin=-1, vmax=1,    # Fixed scale
-            square=True,        # Make cells square
-            linewidths=0.5,     # Line width between cells
-            cbar_kws={"shrink": .75})  # Colorbar shrink
-
-# Title and layout
-plt.title("Correlation Heatmap", fontsize=16)
-plt.tight_layout()
-
-# Show plot
-plt.show()
-```
-
-
-    
-![png](Exercise9_files/Exercise9_27_0.png)
-    
-
-
-Interpretation of the heatmap
-
-We can see some interesting relations form this correlation matrix
-Sp atack and sp defence have one of the strongest positive correlations, that means that they usually go together
-But speed and defence have one of the weakest positive correlations, so they usually dont go together, which all makes sense. When we think of a special pokemon we rather expect it to have special attack and special defence, and if we have a fast pokemon we wont really expect it to have strong defence skills
-
-## Rank Correlations
-
-Rank correlations are measures of the strength and direction of a monotonic (increasing or decreasing) relationship between two variables. Instead of numerical values, they use ranks, i.e., positions in an ordered set.
-
-They are less sensitive to outliers and do not require linearity (unlike Pearson's correlation).
-
-### Types of Rank Correlations
-
-1. $ρ$ (rho) **Spearman's**
-- Based on the ranks of the data.
-- Value: from –1 to 1.
-- Works well for monotonic but non-linear relationships.
-
-$$
-\rho = 1 - \frac{6 \sum d_i^2}{n(n^2 - 1)}
-$$
-
-Where:
-- $d_i$ – differences between the ranks of observations,
-- $n$ – number of observations.
-
-2. $τ$ (tau) **Kendall's**
-- Measures the number of concordant vs. discordant pairs.
-- More conservative than Spearman's – often yields smaller values.
-- Also ranges from –1 to 1.
-
-$$
-\tau = \frac{(C - D)}{\frac{1}{2}n(n - 1)}
-$$
-
-Where:
-- $τ$ — Kendall's correlation coefficient,
-- $C$ — number of concordant pairs,
-- $D$ — number of discordant pairs,
-- $n$ — number of observations,
-- $\frac{1}{2}n(n - 1)$ — total number of possible pairs of observations.
-
-What are concordant and discordant pairs?
-- Concordant pair: if $x_i$ < $x_j$ and $y_i$ < $y_j$, or $x_i$ > $x_j$ and $y_i$ > $y_j$.
-- Discordant pair: if $x_i$ < $x_j$ and $y_i$ > $y_j$, or $x_i$ > $x_j$ and $y_i$ < $y_j$.
-
-### When to use rank correlations?
-- When the data are not normally distributed.
-- When you suspect a non-linear but monotonic relationship.
-- When you have rank correlations, such as grades, ranking, preference level.
-
-| Correlation type | Description | When to use |
-|------------------|-----------------------------------------------------|----------------------------------------|
-| Spearman's (ρ) | Monotonic correlation, based on ranks | When data are nonlinear or have outliers |
-| Kendall's (τ) | Counts the proportion of congruent and incongruent pairs | When robustness to ties is important |
-
-### Interpretation of correlation values
-
-| Range of values | Correlation interpretation |
-|------------------|----------------------------------|
-| 0.8 - 1.0 | very strong positive |
-| 0.6 - 0.8 | strong positive |
-| 0.4 - 0.6 | moderate positive |
-| 0.2 - 0.4 | weak positive |
-| 0.0 - 0.2 | very weak or no correlation |
-| < 0 | similarly - negative correlation |
-
-
-```python
-x_demo = np.linspace(1, 10, 50)
-y_demo = np.exp(x_demo)
-pearson_r, _ = ss.pearsonr(x_demo, y_demo)
-spearman_rho, _ = ss.spearmanr(x_demo, y_demo)
-plt.figure(figsize=(8, 5))
-sns.scatterplot(x=x_demo, y=y_demo, color="purple", s=60, alpha=0.8)
-plt.title(f"Prove for higher values in Spearman correlation\nPearson: {pearson_r:.2f} | Spearman: {spearman_rho:.2f}", fontsize=14)
-plt.xlabel("X (Constant increase)", fontsize=12)
-plt.ylabel("Y (Exponential increase)", fontsize=12)
-plt.grid(True, linestyle='--', alpha=0.6)
-plt.show()
-```
-
-
-    
-![png](Exercise9_files/Exercise9_33_0.png)
-    
-
-
-We made our own experiment here
-
-Pearson method was looking more for a straight line, it assumed that the correlation is strong because the dots are going up and further from regression line
-
-Spearman method ignored the shape of the curve and focused only on the ranks, then if x increases then y always increases, so it detected perfect monotonic correlation
-
-It shows that when we are dealing with nonlinear data its better to use ranking correlation methods
-
-
-```python
-# Compute Kendall rank correlation
-corr_kendall = df_pokemon.corr(method='kendall', numeric_only=True)
-
-# Set up the matplotlib figure
-plt.figure(figsize=(10, 8))
-
-# Create a heatmap
-sns.heatmap(corr_kendall,   #i think there was supposed to be corr_kendall instead of corr
-            annot=True,         # Show correlation coefficients
-            fmt=".2f",          # Format for coefficients
-            cmap="coolwarm",    # Color palette
-            vmin=-1, vmax=1,    # Fixed scale
-            square=True,        # Make cells square
-            linewidths=0.5,     # Line width between cells
-            cbar_kws={"shrink": .75})  # Colorbar shrink
-
-# Title and layout
-plt.title("Correlation Heatmap", fontsize=16)
-plt.tight_layout()
-
-# Show plot
-plt.show()
-```
-
-
-    
-![png](Exercise9_files/Exercise9_35_0.png)
-    
-
-
-Interpretation of the heatmap
-
-Kendall's correlation values are systematically lower(closer to zero) than those of Pearson or Spearman. This is a natural mathematical characteristic of this method because it is based on strictly counting concordant and discordant pairs, it is more conservative, making high correlation scores "harder" to achieve.
-
- Although the coefficients themselves are lower, the primary relationships within the dataset remain consistent. Sp. Atk and Sp. Def still form the strongest pair on the heatmap. This proves that this relationship is not just a mathematical artifact but an actual mechanic within the data.
-
-### Comparison of Correlation Coefficients
-
-| Property                | Pearson (r)                   | Spearman (ρ)                        | Kendall (τ)                          |
-|-------------------------|-------------------------------|--------------------------------------|---------------------------------------|
-| What it measures?       | Linear relationship           | Monotonic relationship (based on ranks) | Monotonic relationship (based on pairs) |
-| Data type               | Quantitative, normal distribution | Ranks or ordinal/quantitative data  | Ranks or ordinal/quantitative data   |
-| Sensitivity to outliers | High                          | Lower                               | Low                                   |
-| Value range             | –1 to 1                       | –1 to 1                             | –1 to 1                               |
-| Requires linearity      | Yes                           | No                                  | No                                    |
-| Robustness to ties      | Low                           | Medium                              | High                                  |
-| Interpretation          | Strength and direction of linear relationship | Strength and direction of monotonic relationship | Proportion of concordant vs discordant pairs |
-| Significance test       | Yes (`scipy.stats.pearsonr`)  | Yes (`spearmanr`)                   | Yes (`kendalltau`)                   |
-
-Brief summary:
-- Pearson - best when the data are normal and the relationship is linear.
-- Spearman - works better for non-linear monotonic relationships.
-- Kendall - more conservative, often used in social research, less sensitive to small changes in data.
-
-### Your Turn
-
-For the Pokemon dataset, find the pairs of variables that are most appropriate for using one of the quantitative correlation measures. Calculate them, then visualize them.
-
-
-```python
-var1 = 'Sp. Atk'
-var2 = 'Sp. Def'
-
-pearson_corr, p_p = ss.pearsonr(df_pokemon[var1], df_pokemon[var2])
-spearman_corr, p_s = ss.spearmanr(df_pokemon[var1], df_pokemon[var2])
-kendall_corr, p_k = ss.kendalltau(df_pokemon[var1], df_pokemon[var2])
-
-print(f"Correlation metrics for {var1} vs {var2}:")
-print(f"  Pearson's r:  {pearson_corr:.4f} (p-value: {p_p:.2e})")
-print(f"  Spearman's ρ: {spearman_corr:.4f} (p-value: {p_s:.2e})")
-print(f"  Kendall's τ:  {kendall_corr:.4f} (p-value: {p_k:.2e})")
-```
-
-    Correlation metrics for Sp. Atk vs Sp. Def:
-      Pearson's r:  0.5061 (p-value: 2.92e-53)
-      Spearman's ρ: 0.5718 (p-value: 1.24e-70)
-      Kendall's τ:  0.4230 (p-value: 1.39e-67)
-    
-
-
-```python
-fig, axes = plt.subplots(1, 2, figsize=(16, 6))
-
-sns.regplot(
-    data=df_pokemon,
-    x=var1,
-    y=var2,
-    ax=axes[0],
-    scatter_kws={'alpha':0.4, 'color': '#34495e'},
-    line_kws={'color': '#e74c3c', 'lw': 3}
-)
-axes[0].set_title(f"Scatter Plot: {var1} vs {var2}", fontsize=14)
-axes[0].set_xlabel(var1, fontsize=12)
-axes[0].set_ylabel(var2, fontsize=12)
-axes[0].grid(True, linestyle='--', alpha=0.6)
-
-stats_list = ['HP', 'Attack', 'Defense', 'Sp. Atk', 'Sp. Def', 'Speed']
-corr_matrix = df_pokemon[stats_list].corr(method='spearman') # Using Spearman as a robust default
-
-sns.heatmap(
-    corr_matrix,
-    annot=True,
-    fmt=".2f",
-    cmap="coolwarm",
-    vmin=-1, vmax=1,
-    square=True,
-    linewidths=0.5,
-    ax=axes[1],
-    cbar_kws={"shrink": .8}
-)
-axes[1].set_title("Spearman Rank Correlation Matrix", fontsize=14)
-
-plt.tight_layout()
-plt.show()
-```
-
-
-    
-![png](Exercise9_files/Exercise9_41_0.png)
-    
-
-
-Interpretation of Quantitative Correlation Measures
-
-The output displays three different correlation coefficients. All three return extremely low p-values (close to 0). This confirms that the positive relationship between Special Attack and Special Defense is statistically significant and not random.
-As mathematically expected, Kendall's tau is the most conservative (lowest value). Because Pokémon stats often contain extreme outliers (e.g., Legendary Pokémon with massively skewed stats), Spearman's rho serves as the most reliable measure for this specific pair.
-
-Scatter Plot: The regression line highlights a clear positive trend. Pokémon with high Special Attack tend to have high Special Defense. However, the wide spread of the data points indicates high variance (meaning there are plenty of exceptions, like pure attackers with no defense).
-Spearman Heatmap: Using Spearman's method for the correlation matrix provides a robust overview of how all base stats move together monotonically, ignoring the distortions caused by outliers. It confirms that the Sp. Atk and Sp. Def pair has the strongest correlation among all core stats.
-
-## Correlation of Qualitative Variables
-
-A categorical variable is one that takes descriptive values ​​that represent categories—e.g. Pokémon type (Fire, Water, Grass), gender, status (Legendary vs. Normal), etc.
-
-Such variables cannot be analyzed directly using correlation methods for numbers (Pearson, Spearman, Kendall). Other techniques are used instead.
-
-### Contingency Table
-
-A contingency table is a special cross-tabulation table that shows the frequency (i.e., the number of cases) for all possible combinations of two categorical variables.
-
-It is a fundamental tool for analyzing relationships between qualitative features.
-
-#### Chi-Square Test of Independence
-
-The Chi-Square test checks whether there is a statistically significant relationship between two categorical variables.
-
-Concept:
-
-We compare:
-- observed values (from the contingency table),
-- with expected values, assuming the variables are independent.
-
-$$
-\chi^2 = \sum \frac{(O_{ij} - E_{ij})^2}{E_{ij}}
-$$
-
-Where:
-- $O_{ij}$ – observed count in cell ($i$, $j$),
-- $E_{ij}$ – expected count in cell ($i$, $j$), assuming independence.
-
-### Example: Calculating Expected Values and Chi-Square Statistic in Python
-
-Here’s how you can calculate the **expected values** and **Chi-Square statistic (χ²)** step by step using Python.
-
----
-
-#### Step 1: Create the Observed Contingency Table
-We will use the Pokémon example:
-
-| Type 1 | Legendary = False | Legendary = True | Total |
-|--------|-------------------|------------------|-------|
-| Fire   | 18                | 5                | 23    |
-| Water  | 25                | 3                | 28    |
-| Grass  | 20                | 2                | 22    |
-| Total  | 63                | 10               | 73    |
-
-
-```python
-import numpy as np
-import pandas as pd
-from scipy.stats import chi2_contingency
-
-# Observed values (contingency table)
-observed = np.array([
-    [18, 5],  # Fire
-    [25, 3],  # Water
-    [20, 2]   # Grass
-])
-
-# Convert to DataFrame for better visualization
-observed_df = pd.DataFrame(
-    observed,
-    columns=["Legendary = False", "Legendary = True"],
-    index=["Fire", "Water", "Grass"]
-)
-print("Observed Table:")
-print(observed_df)
-```
-
-    Observed Table:
-           Legendary = False  Legendary = True
-    Fire                  18                 5
-    Water                 25                 3
-    Grass                 20                 2
-    
-
-Step 2: Calculate Expected Values
-The expected values are calculated using the formula:
-
-$$ E_{ij} = \frac{\text{Row Total} \times \text{Column Total}}{\text{Grand Total}} $$
-
-You can calculate this manually or use scipy.stats.chi2_contingency, which automatically computes the expected values.
-
-
-```python
-# Perform Chi-Square test
-chi2, p, dof, expected = chi2_contingency(observed)
-
-# Convert expected values to DataFrame for better visualization
-expected_df = pd.DataFrame(
-    expected,
-    columns=["Legendary = False", "Legendary = True"],
-    index=["Fire", "Water", "Grass"]
-)
-print("\nExpected Table:")
-print(expected_df)
-```
-
-    
-    Expected Table:
-           Legendary = False  Legendary = True
-    Fire           19.849315          3.150685
-    Water          24.164384          3.835616
-    Grass          18.986301          3.013699
-    
-
-Step 3: Calculate the Chi-Square Statistic
-The Chi-Square statistic is calculated using the formula:
-
-$$ \chi^2 = \sum \frac{(O_{ij} - E_{ij})^2}{E_{ij}} $$
-
-This is done automatically by scipy.stats.chi2_contingency, but you can also calculate it manually:
-
-
-```python
-# Manual calculation of Chi-Square statistic
-chi2_manual = np.sum((observed - expected) ** 2 / expected)
-print(f"\nChi-Square Statistic (manual): {chi2_manual:.4f}")
-```
-
-    
-    Chi-Square Statistic (manual): 1.8638
-    
-
-Step 4: Interpret the Results
-The chi2_contingency function also returns:
-
-p-value: The probability of observing the data if the null hypothesis (independence) is true.
-Degrees of Freedom (dof): Calculated as (rows - 1) * (columns - 1).
-
-
-```python
-print(f"\nChi-Square Statistic: {chi2:.4f}")
-print(f"p-value: {p:.4f}")
-print(f"Degrees of Freedom: {dof}")
-```
-
-    
-    Chi-Square Statistic: 1.8638
-    p-value: 0.3938
-    Degrees of Freedom: 2
-    
-
-**Interpretation of the Chi-Square Test Result:**
-
-| Value               | Meaning                                         |
-|---------------------|-------------------------------------------------|
-| High χ² value       | Large difference between observed and expected values |
-| Low p-value         | Strong basis to reject the null hypothesis of independence |
-| p < 0.05            | Statistically significant relationship between variables |
-
-
-```python
-observed_df.plot(kind='bar', stacked=True, figsize=(8, 6), color=['#3498db', '#e74c3c'], alpha=0.8, edgecolor='black')
-
-plt.title("Proportion of legendary Pokemons with diversity of types", fontsize=14, pad=15)
-plt.xlabel("Type of the Pokemon", fontsize=12)
-plt.ylabel("Observed number of Pokemons", fontsize=12)
-plt.xticks(rotation=0)
-plt.legend(title="Status Legendary", labels=["Normal (False)", "Legendary (True)"])
-plt.grid(axis='y', linestyle='--', alpha=0.5)
-plt.show()
-```
-
-
-    
-![png](Exercise9_files/Exercise9_54_0.png)
-    
-
-
-The calculated p-value for this specific sample (Fire, Water, Grass) is approximately 0.39. Since p > 0.05, we fail to reject the null hypothesis. This means there is no statistically significant relationship between these three specific Pokémon types and their Legendary status in this subset. Any differences we see are likely due to random chance.
-
-Visual Confirmation (Stacked Bar Chart):
-
-The stacked bar chart visually supports this conclusion. While the Fire type has a slightly thicker "Legendary" segment compared to Grass or Water, the overall proportion of Legendary Pokémon across these three categories remains relatively similar. The variations are not drastic enough to prove a systemic game design rule based on this small sample.
-
-### Qualitative Correlations
-
-#### Cramér's V
-
-**Cramér's V** is a measure of the strength of association between two categorical variables. It is based on the Chi-Square test but scaled to a range of 0–1, making it easier to interpret the strength of the relationship.
-
-$$
-V = \sqrt{ \frac{\chi^2}{n \cdot (k - 1)} }
-$$
-
-Where:
-- $\chi^2$ – Chi-Square test statistic,
-- $n$ – number of observations,
-- $k$ – the smaller number of categories (rows/columns) in the contingency table.
-
----
-
-#### Phi Coefficient ($φ$)
-
-Application:
-- Both variables must be dichotomous (e.g., Yes/No, 0/1), meaning the table must have the smallest size of **2×2**.
-- Ideal for analyzing relationships like gender vs purchase, type vs legendary.
-
-$$
-\phi = \sqrt{ \frac{\chi^2}{n} }
-$$
-
-Where:
-- $\chi^2$ – Chi-Square test statistic for a 2×2 table,
-- $n$ – number of observations.
-
----
-
-#### Tschuprow’s T
-
-**Tschuprow’s T** is a measure of association similar to **Cramér's V**, but it has a different scale. It is mainly used when the number of categories in the two variables differs. This is a more advanced measure applicable to a broader range of contingency tables.
-
-$$
-T = \sqrt{\frac{\chi^2}{n \cdot (k - 1)}}
-$$
-
-Where:
-- $\chi^2$ – Chi-Square test statistic,
-- $n$ – number of observations,
-- $k$ – the smaller number of categories (rows or columns) in the contingency table.
-
-Application: Tschuprow’s T is useful when dealing with contingency tables with varying numbers of categories in rows and columns.
-
----
-
-### Summary - Qualitative Correlations
-
-| Measure            | What it measures                                       | Application                     | Value Range     | Strength Interpretation       |
-|--------------------|--------------------------------------------------------|---------------------------------|------------------|-------------------------------|
-| **Cramér's V**     | Strength of association between nominal variables      | Any categories                  | 0 – 1           | 0.1–weak, 0.3–moderate, >0.5–strong |
-| **Phi ($φ$)**      | Strength of association in a **2×2** table             | Two binary variables            | -1 – 1          | Similar to correlation        |
-| **Tschuprow’s T**  | Strength of association, alternative to Cramér's V     | Tables with similar category counts | 0 – 1      | Less commonly used            |
-| **Chi² ($χ²$)**    | Statistical test of independence                       | All categorical variables       | 0 – ∞           | Higher values indicate stronger differences |
-
-### Example
-
-Let's investigate whether the Pokémon's type (type_1) is affected by whether the Pokémon is legendary.
-
-We'll use the **scipy** library.
-
-This library already has built-in functions for calculating various qualitative correlation measures.
-
-
-```python
-from scipy.stats.contingency import association
-
-# Contingency table:
-ct = pd.crosstab(df_pokemon["Type 1"], df_pokemon["Legendary"])
-
-# Calculating Cramér's V measure
-V = association(ct, method="cramer") # https://docs.scipy.org/doc/scipy/reference/generated/scipy.stats.contingency.association.html#association
-
-print(f"Cramer's V: {V}") # interpret!
-
-```
-
-    Cramer's V: 0.3361928228447545
-    
-
-### Your turn
-
-What visualization would be most appropriate for presenting a quantitative, ranked, and qualitative relationship?
-
-Try to think about which pairs of variables could have which type of analysis based on the Pokemon data.
-
----
-
-
-```python
-# example
-r, p_val = ss.pearsonr(df_pokemon['Attack'], df_pokemon['Defense'])
-print(f"Pearson's r: {r:.4f}")
-
-sns.regplot(data=df_pokemon, x='Attack', y='Defense',
-            scatter_kws={'alpha':0.6, 'color': '#2980b9'},
-            line_kws={'color': '#e74c3c', 'lw': 2.5})
-plt.title("Quantitative Case: Attack vs Defense")
-plt.show()
-```
-
-    Pearson's r: 0.4387
-    
-
-
-    
-![png](Exercise9_files/Exercise9_60_1.png)
-    
-
-
-For quantitative relationships like Attack vs Defense, a scatter plot with a regression line is best to visualize continuous tracking trends and evaluate linear correlations. For ranked or ordinal relationships like Generation vs Total, a box plot is ideal to reveal if total base stat distributions systematically shift upward over sequential game releases. For qualitative relationships like Type 1 vs Legendary, a contingency table heatmap is best to display category overlaps and discover if specific elemental categories have disproportionately higher counts of legendary classifications
-
-## Heatmaps for qualitative correlations
-
-
-```python
-# git clone https://github.com/ayanatherate/dfcorrs.git
-# cd dfcorrs 
-# pip install -r requirements.txt
-
-from dfcorrs.cramersvcorr import Cramers
-cram=Cramers()
-cramer = cram.corr(df_pokemon)
-print(cramer)
-plt.figure(figsize=(10, 8))
-sns.heatmap(cramer, annot=True, cmap='Blues', fmt=".2f", square=True)
-plt.title("Correlation matrix V Cramér for Pokemons")
-plt.show()
-
-```
-
-                Legendary    Type 2    Type 1  Generation
-    Legendary    0.991617  0.108331  0.303091    0.078075
-    Type 2       0.108331  1.000000  0.196861    0.207929
-    Type 1       0.303091  0.196861  1.000000    0.158249
-    Generation   0.078075  0.207929  0.158249    1.000000
-    
-
-
-    
-![png](Exercise9_files/Exercise9_63_1.png)
-    
-
-
-No Negative Correlations:The results always fall within the range of 0 to 1. Cramér's V only indicates the strength of the association, but it cannot indicate its "direction" (categories cannot "increase" or "decrease" relative to one another).
-Game Design in Practice (Type 1 vs Type 2): The strongest associations on this type of chart typically involve the primary and secondary Pokémon types. From a game design perspective, certain type combinations appear very frequently (e.g., Normal is almost always paired with Flying, and Grass with Poison), while others do not exist at all. The Cramér's V matrix accurately captures and visualizes these rules imposed by the developers.
-Association with "Legendary" Status: The visible relationship between type and legendary status confirms what was previously proven by the Chi-Square test—legendary status is not distributed randomly and equally across every type. Instead, it favors specific "elite" elements (such as Dragon or Psychic types).
-
-## Your turn!
-
-Load the "sales" dataset and perform the bivariate analysis together with necessary plots. Remember about to run data preprocessing before the analysis.
-
-
-```python
-df_sales = pd.read_excel("sales.xlsx")
-df_sales.head(5)
-```
-
-
-
-
-<div>
-<style scoped>
-    .dataframe tbody tr th:only-of-type {
-        vertical-align: middle;
-    }
-
-    .dataframe tbody tr th {
-        vertical-align: top;
-    }
-
-    .dataframe thead th {
-        text-align: right;
-    }
-</style>
-<table border="1" class="dataframe">
-  <thead>
-    <tr style="text-align: right;">
-      <th></th>
-      <th>Date</th>
-      <th>Store_Type</th>
-      <th>City_Type</th>
-      <th>Day_Temp</th>
-      <th>No_of_Customers</th>
-      <th>Sales</th>
-      <th>Product_Quality</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <th>0</th>
-      <td>2020-10-01</td>
-      <td>1</td>
-      <td>1</td>
-      <td>30.0</td>
-      <td>100.0</td>
-      <td>3112.0</td>
-      <td>A</td>
-    </tr>
-    <tr>
-      <th>1</th>
-      <td>2020-10-02</td>
-      <td>2</td>
       <td>1</td>
       <td>32.0</td>
-      <td>115.0</td>
-      <td>3682.0</td>
-      <td>A</td>
+      <td>84.87882</td>
+      <td>10</td>
+      <td>24.98298</td>
+      <td>121.54024</td>
+      <td>37.9</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>2</td>
+      <td>19.5</td>
+      <td>306.59470</td>
+      <td>9</td>
+      <td>24.98034</td>
+      <td>121.53951</td>
+      <td>42.2</td>
     </tr>
     <tr>
       <th>2</th>
-      <td>2020-10-03</td>
       <td>3</td>
-      <td>3</td>
-      <td>31.0</td>
-      <td>NaN</td>
-      <td>2774.0</td>
-      <td>A</td>
+      <td>13.3</td>
+      <td>561.98450</td>
+      <td>5</td>
+      <td>24.98746</td>
+      <td>121.54391</td>
+      <td>47.3</td>
     </tr>
     <tr>
       <th>3</th>
-      <td>2020-10-04</td>
-      <td>1</td>
-      <td>2</td>
-      <td>29.0</td>
-      <td>105.0</td>
-      <td>3182.0</td>
-      <td>NaN</td>
+      <td>4</td>
+      <td>13.3</td>
+      <td>561.98450</td>
+      <td>5</td>
+      <td>24.98746</td>
+      <td>121.54391</td>
+      <td>54.8</td>
     </tr>
     <tr>
       <th>4</th>
-      <td>2020-10-05</td>
+      <td>5</td>
+      <td>5.0</td>
+      <td>390.56840</td>
+      <td>5</td>
+      <td>24.97937</td>
+      <td>121.54245</td>
+      <td>43.1</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+
+
+
+## Describing *multivariate* data with regression models
+
+- So far, we've been focusing on *univariate and bivariate data*: analysis.
+- What if we want to describe how *two or more than two distributions* relate to each other?
+
+1. Let's simplify variables' names:
+
+
+```python
+df_estate = df_estate.rename(columns={
+    'house age': 'house_age_years',
+    'house price of unit area': 'price_twd_msq',
+    'number of convenience stores': 'n_convenience',
+    'distance to the nearest MRT station': 'dist_to_mrt_m'
+})
+
+df_estate.head(5)
+```
+
+
+
+
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>No</th>
+      <th>house_age_years</th>
+      <th>dist_to_mrt_m</th>
+      <th>n_convenience</th>
+      <th>latitude</th>
+      <th>longitude</th>
+      <th>price_twd_msq</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
       <td>1</td>
+      <td>32.0</td>
+      <td>84.87882</td>
+      <td>10</td>
+      <td>24.98298</td>
+      <td>121.54024</td>
+      <td>37.9</td>
+    </tr>
+    <tr>
+      <th>1</th>
       <td>2</td>
-      <td>33.0</td>
-      <td>104.0</td>
-      <td>1368.0</td>
-      <td>B</td>
+      <td>19.5</td>
+      <td>306.59470</td>
+      <td>9</td>
+      <td>24.98034</td>
+      <td>121.53951</td>
+      <td>42.2</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>3</td>
+      <td>13.3</td>
+      <td>561.98450</td>
+      <td>5</td>
+      <td>24.98746</td>
+      <td>121.54391</td>
+      <td>47.3</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>4</td>
+      <td>13.3</td>
+      <td>561.98450</td>
+      <td>5</td>
+      <td>24.98746</td>
+      <td>121.54391</td>
+      <td>54.8</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>5</td>
+      <td>5.0</td>
+      <td>390.56840</td>
+      <td>5</td>
+      <td>24.97937</td>
+      <td>121.54245</td>
+      <td>43.1</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+
+
+
+We can also perform binning for "house_age_years":
+
+
+```python
+df_estate['house_age_cat'] = pd.cut(
+    df_estate['house_age_years'],
+    bins=[0, 15, 30, 45],
+    include_lowest=True,
+    right=False
+)
+df_estate.head(5)
+```
+
+
+
+
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>No</th>
+      <th>house_age_years</th>
+      <th>dist_to_mrt_m</th>
+      <th>n_convenience</th>
+      <th>latitude</th>
+      <th>longitude</th>
+      <th>price_twd_msq</th>
+      <th>house_age_cat</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>1</td>
+      <td>32.0</td>
+      <td>84.87882</td>
+      <td>10</td>
+      <td>24.98298</td>
+      <td>121.54024</td>
+      <td>37.9</td>
+      <td>[30, 45)</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>2</td>
+      <td>19.5</td>
+      <td>306.59470</td>
+      <td>9</td>
+      <td>24.98034</td>
+      <td>121.53951</td>
+      <td>42.2</td>
+      <td>[15, 30)</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>3</td>
+      <td>13.3</td>
+      <td>561.98450</td>
+      <td>5</td>
+      <td>24.98746</td>
+      <td>121.54391</td>
+      <td>47.3</td>
+      <td>[0, 15)</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>4</td>
+      <td>13.3</td>
+      <td>561.98450</td>
+      <td>5</td>
+      <td>24.98746</td>
+      <td>121.54391</td>
+      <td>54.8</td>
+      <td>[0, 15)</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>5</td>
+      <td>5.0</td>
+      <td>390.56840</td>
+      <td>5</td>
+      <td>24.97937</td>
+      <td>121.54245</td>
+      <td>43.1</td>
+      <td>[0, 15)</td>
     </tr>
   </tbody>
 </table>
@@ -6269,69 +4173,1044 @@ df_sales.head(5)
 
 
 ```python
-df_sales = df_sales.fillna(df_sales.mean(numeric_only=True))
-corr = df_sales.corr(numeric_only=True)
-#data preprocessing - we wanted to avoid dropping any values so instead we filled the missing values with the mean of all the other values
-plt.figure(figsize=(10, 8))
-sns.heatmap(corr,
-            annot=True,
-            fmt=".2f",
-            cmap="coolwarm",
-            vmin=-1, vmax=1,
-            square=True,
-            linewidths=0.5,
-            cbar_kws={"shrink": .75})
-plt.title("Correlation Heatmap - Sales", fontsize=16)
-plt.tight_layout()
-plt.show()
-#correlation heapmap - shows correlation between numerical values
+cat_dict = {
+    pd.Interval(left=0, right=15, closed='left'): '0-15',
+    pd.Interval(left=15, right=30, closed='left'): '15-30',
+    pd.Interval(left=30, right=45, closed='left'): '30-45'
+}
 
-var1 = corr.columns[0]
-var2 = corr.columns[1]
-sns.regplot(data=df_sales, x=var1, y=var2,
-            scatter_kws={'alpha':0.4, 'color': '#34495e'},
-            line_kws={'color': '#e74c3c', 'lw': 3})
-plt.title(f"Scatter Plot: {var1} vs {var2}", fontsize=14)
-plt.xlabel(var1, fontsize=12)
-plt.ylabel(var2, fontsize=12)
-plt.grid(True, linestyle='--', alpha=0.6)
+df_estate['house_age_cat_str'] = df_estate['house_age_cat'].map(cat_dict)
+df_estate['house_age_cat_str'] = df_estate['house_age_cat_str'].astype('category')
+df_estate.head()
+```
+
+
+
+
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>No</th>
+      <th>house_age_years</th>
+      <th>dist_to_mrt_m</th>
+      <th>n_convenience</th>
+      <th>latitude</th>
+      <th>longitude</th>
+      <th>price_twd_msq</th>
+      <th>house_age_cat</th>
+      <th>house_age_cat_str</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>1</td>
+      <td>32.0</td>
+      <td>84.87882</td>
+      <td>10</td>
+      <td>24.98298</td>
+      <td>121.54024</td>
+      <td>37.9</td>
+      <td>[30, 45)</td>
+      <td>30-45</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>2</td>
+      <td>19.5</td>
+      <td>306.59470</td>
+      <td>9</td>
+      <td>24.98034</td>
+      <td>121.53951</td>
+      <td>42.2</td>
+      <td>[15, 30)</td>
+      <td>15-30</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>3</td>
+      <td>13.3</td>
+      <td>561.98450</td>
+      <td>5</td>
+      <td>24.98746</td>
+      <td>121.54391</td>
+      <td>47.3</td>
+      <td>[0, 15)</td>
+      <td>0-15</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>4</td>
+      <td>13.3</td>
+      <td>561.98450</td>
+      <td>5</td>
+      <td>24.98746</td>
+      <td>121.54391</td>
+      <td>54.8</td>
+      <td>[0, 15)</td>
+      <td>0-15</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>5</td>
+      <td>5.0</td>
+      <td>390.56840</td>
+      <td>5</td>
+      <td>24.97937</td>
+      <td>121.54245</td>
+      <td>43.1</td>
+      <td>[0, 15)</td>
+      <td>0-15</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+
+
+
+
+```python
+#Checking the updated datatype of house_age_years
+df_estate.house_age_cat_str.dtype
+```
+
+
+
+
+    CategoricalDtype(categories=['0-15', '15-30', '30-45'], ordered=True, categories_dtype=str)
+
+
+
+
+```python
+#Checking the dataframe for any NA values
+df_estate.isna().any()
+```
+
+
+
+
+    No                   False
+    house_age_years      False
+    dist_to_mrt_m        False
+    n_convenience        False
+    latitude             False
+    longitude            False
+    price_twd_msq        False
+    house_age_cat        False
+    house_age_cat_str    False
+    dtype: bool
+
+
+
+## Descriptive Statistics
+
+Prepare a heatmap with correlation coefficients on it:
+
+
+```python
+corr_matrix = df_estate.iloc[:, :6].corr()
+
+plt.figure(figsize=(8, 6))
+sns.heatmap(corr_matrix, annot=True, fmt=".2f", cmap="coolwarm", square=True)
+plt.title("Correlation Matrix")
 plt.show()
-#scatterplot - shows linear correlation between two variables
 ```
 
 
     
-![png](Exercise9_files/Exercise9_67_0.png)
+![png](Exercise10_files/Exercise10_15_0.png)
+    
+
+
+Draw a scatter plot of n_convenience vs. price_twd_msq:
+
+
+```python
+plt.scatter(df_estate['n_convenience'], df_estate['price_twd_msq'])
+plt.savefig('scatter.png')
+```
+
+
+    
+![png](Exercise10_files/Exercise10_17_0.png)
+    
+
+
+Draw a scatter plot of house_age_years vs. price_twd_msq:
+
+
+```python
+plt.scatter(df_estate['house_age_years'], df_estate['price_twd_msq'])
+```
+
+
+
+
+    <matplotlib.collections.PathCollection at 0x1c98f71afd0>
+
+
+
+
+    
+![png](Exercise10_files/Exercise10_19_1.png)
+    
+
+
+Draw a scatter plot of distance to nearest MRT station vs. price_twd_msq:
+
+
+```python
+plt.scatter(df_estate['dist_to_mrt_m'], df_estate['price_twd_msq'])
+```
+
+
+
+
+    <matplotlib.collections.PathCollection at 0x1c98f46c690>
+
+
+
+
+    
+![png](Exercise10_files/Exercise10_21_1.png)
+    
+
+
+Plot a histogram of price_twd_msq with 10 bins, facet the plot so each house age group gets its own panel:
+
+
+```python
+sns.displot(data=df_estate, x='price_twd_msq', col='house_age_cat_str', bins=10)
+```
+
+
+
+
+    <seaborn.axisgrid.FacetGrid at 0x1c98f4d4410>
+
+
+
+
+    
+![png](Exercise10_files/Exercise10_23_1.png)
+    
+
+
+Summarize to calculate the mean, sd, median etc. house price/area by house age:
+
+
+```python
+df_estate.groupby('house_age_cat_str')['price_twd_msq'].agg(['mean', 'std', 'median'])
+```
+
+
+
+
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>mean</th>
+      <th>std</th>
+      <th>median</th>
+    </tr>
+    <tr>
+      <th>house_age_cat_str</th>
+      <th></th>
+      <th></th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0-15</th>
+      <td>41.766842</td>
+      <td>14.164308</td>
+      <td>42.55</td>
+    </tr>
+    <tr>
+      <th>15-30</th>
+      <td>32.642636</td>
+      <td>11.398217</td>
+      <td>32.90</td>
+    </tr>
+    <tr>
+      <th>30-45</th>
+      <td>37.654737</td>
+      <td>12.842547</td>
+      <td>38.30</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+
+
+
+## Simple model
+
+Run a linear regression of price_twd_msq vs. best, but only 1 predictor:
+
+
+```python
+import statsmodels.api as sm
+
+# Let's use 'dist_to_mrt_m' as the single best predictor
+X = df_estate[['dist_to_mrt_m']]
+y = df_estate['price_twd_msq']
+
+# Add constant for intercept
+X = sm.add_constant(X)
+
+# Fit the model
+model1 = sm.OLS(y, X).fit()
+
+# Show the summary
+print(model1.summary())
+```
+
+                                OLS Regression Results                            
+    ==============================================================================
+    Dep. Variable:          price_twd_msq   R-squared:                       0.454
+    Model:                            OLS   Adj. R-squared:                  0.452
+    Method:                 Least Squares   F-statistic:                     342.2
+    Date:                Sun, 07 Jun 2026   Prob (F-statistic):           4.64e-56
+    Time:                        16:03:03   Log-Likelihood:                -1542.5
+    No. Observations:                 414   AIC:                             3089.
+    Df Residuals:                     412   BIC:                             3097.
+    Df Model:                           1                                         
+    Covariance Type:            nonrobust                                         
+    =================================================================================
+                        coef    std err          t      P>|t|      [0.025      0.975]
+    ---------------------------------------------------------------------------------
+    const            45.8514      0.653     70.258      0.000      44.569      47.134
+    dist_to_mrt_m    -0.0073      0.000    -18.500      0.000      -0.008      -0.006
+    ==============================================================================
+    Omnibus:                      140.820   Durbin-Watson:                   2.151
+    Prob(Omnibus):                  0.000   Jarque-Bera (JB):              988.283
+    Skew:                           1.263   Prob(JB):                    2.49e-215
+    Kurtosis:                      10.135   Cond. No.                     2.19e+03
+    ==============================================================================
+    
+    Notes:
+    [1] Standard Errors assume that the covariance matrix of the errors is correctly specified.
+    [2] The condition number is large, 2.19e+03. This might indicate that there are
+    strong multicollinearity or other numerical problems.
+    
+
+What do the above results mean? Write down the model and interpret it.
+
+Discuss model accuracy.
+
+Model equation:
+ * price_twd_msq = Intercept + coefficient * dist_to_mrt_m
+  The results indicate a negative relationship between distance to the MRT station and house price.
+
+Model accuracy:
+ * To assess accuracy, we look at the R-squared ($R^2$) value from the summary.The $R^2$ is quite low, meaning that distance to the MRT alone explains only a fraction of the total variance in house prices
+
+## Model diagnostics
+
+### 4 Diagnostic plots
+
+
+```python
+fig = plt.figure(figsize=(12, 10))
+sm.graphics.plot_regress_exog(model1, 'dist_to_mrt_m', fig=fig)
+plt.show()
+```
+
+
+    
+![png](Exercise10_files/Exercise10_32_0.png)
+    
+
+
+The four plots show...
+
+
+* These plots verify whether we correctly applied the linear regression model.
+* They show if the model's errors (residuals) are distributed evenly and randomly.
+* They also help detect if the relationship between variables has a hidden curved shape.
+
+### Outliers and high levarage points:
+
+
+```python
+fig, ax = plt.subplots(figsize=(8, 6))
+sm.graphics.influence_plot(model1, ax=ax, criterion="cooks")
+plt.title("Influence Plot (Outliers and High Leverage Points)")
+plt.show()
+```
+
+
+    
+![png](Exercise10_files/Exercise10_36_0.png)
+    
+
+
+Discussion:
+
+
+* The plot highlights unusual properties with extreme prices or features.
+* The largest bubbles represent the points that most strongly distort our calculations.
+* Removing these few exceptions could significantly improve the model's overall accuracy.
+
+
+## Multiple Regression Model
+
+### Test and training set
+
+We begin by splitting the dataset into two parts, training set and testing set. In this example we will randomly take 75% row in this dataset and put it into the training set, and other 25% row in the testing set:
+
+
+```python
+# One-hot encoding for house_age_cat_str in df_estate
+
+encode_dict = {True: 1, False: 0}
+
+house_age_0_15 = df_estate['house_age_cat_str'] == '0-15'
+house_age_15_30 = df_estate['house_age_cat_str'] == '15-30'
+house_age_30_45 = df_estate['house_age_cat_str'] == '30-45'
+
+df_estate['house_age_0_15'] = house_age_0_15.map(encode_dict)
+df_estate['house_age_15_30'] = house_age_15_30.map(encode_dict)
+df_estate['house_age_30_45'] = house_age_30_45.map(encode_dict)
+
+df_estate.head()
+```
+
+
+
+
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>No</th>
+      <th>house_age_years</th>
+      <th>dist_to_mrt_m</th>
+      <th>n_convenience</th>
+      <th>latitude</th>
+      <th>longitude</th>
+      <th>price_twd_msq</th>
+      <th>house_age_cat</th>
+      <th>house_age_cat_str</th>
+      <th>house_age_0_15</th>
+      <th>house_age_15_30</th>
+      <th>house_age_30_45</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>1</td>
+      <td>32.0</td>
+      <td>84.87882</td>
+      <td>10</td>
+      <td>24.98298</td>
+      <td>121.54024</td>
+      <td>37.9</td>
+      <td>[30, 45)</td>
+      <td>30-45</td>
+      <td>0</td>
+      <td>0</td>
+      <td>1</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>2</td>
+      <td>19.5</td>
+      <td>306.59470</td>
+      <td>9</td>
+      <td>24.98034</td>
+      <td>121.53951</td>
+      <td>42.2</td>
+      <td>[15, 30)</td>
+      <td>15-30</td>
+      <td>0</td>
+      <td>1</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>3</td>
+      <td>13.3</td>
+      <td>561.98450</td>
+      <td>5</td>
+      <td>24.98746</td>
+      <td>121.54391</td>
+      <td>47.3</td>
+      <td>[0, 15)</td>
+      <td>0-15</td>
+      <td>1</td>
+      <td>0</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>4</td>
+      <td>13.3</td>
+      <td>561.98450</td>
+      <td>5</td>
+      <td>24.98746</td>
+      <td>121.54391</td>
+      <td>54.8</td>
+      <td>[0, 15)</td>
+      <td>0-15</td>
+      <td>1</td>
+      <td>0</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>5</td>
+      <td>5.0</td>
+      <td>390.56840</td>
+      <td>5</td>
+      <td>24.97937</td>
+      <td>121.54245</td>
+      <td>43.1</td>
+      <td>[0, 15)</td>
+      <td>0-15</td>
+      <td>1</td>
+      <td>0</td>
+      <td>0</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+
+
+
+
+```python
+from sklearn.model_selection import train_test_split
+
+# 75% training, 25% testing, random_state=12 for reproducibility
+train, test = train_test_split(df_estate, train_size=0.75, random_state=12)
+```
+
+Now we have our training set and testing set.
+
+### Variable selection methods
+
+Generally, selecting variables for linear regression is a debatable topic.
+
+There are many methods for variable selecting, namely, forward stepwise selection, backward stepwise selection, etc, some are valid, some are heavily criticized.
+
+I recommend this document: <https://www.stat.cmu.edu/~cshalizi/mreg/15/lectures/26/lecture-26.pdf> and Gung's comment: <https://stats.stackexchange.com/questions/20836/algorithms-for-automatic-model-selection/20856#20856> if you want to learn more about variable selection process.
+
+[**If our goal is prediction**]{.ul}, it is safer to include all predictors in our model, removing variables without knowing the science behind it usually does more harm than good!!!
+
+We begin to create our multiple linear regression model:
+
+
+```python
+import statsmodels.formula.api as smf
+model2 = smf.ols('price_twd_msq ~ dist_to_mrt_m + house_age_0_15 + house_age_30_45', data = df_estate)
+result2 = model2.fit()
+result2.summary()
+```
+
+
+
+
+<table class="simpletable">
+<caption>OLS Regression Results</caption>
+<tr>
+  <th>Dep. Variable:</th>      <td>price_twd_msq</td>  <th>  R-squared:         </th> <td>   0.485</td>
+</tr>
+<tr>
+  <th>Model:</th>                   <td>OLS</td>       <th>  Adj. R-squared:    </th> <td>   0.482</td>
+</tr>
+<tr>
+  <th>Method:</th>             <td>Least Squares</td>  <th>  F-statistic:       </th> <td>   128.9</td>
+</tr>
+<tr>
+  <th>Date:</th>             <td>Sun, 07 Jun 2026</td> <th>  Prob (F-statistic):</th> <td>7.84e-59</td>
+</tr>
+<tr>
+  <th>Time:</th>                 <td>16:03:05</td>     <th>  Log-Likelihood:    </th> <td> -1530.2</td>
+</tr>
+<tr>
+  <th>No. Observations:</th>      <td>   414</td>      <th>  AIC:               </th> <td>   3068.</td>
+</tr>
+<tr>
+  <th>Df Residuals:</th>          <td>   410</td>      <th>  BIC:               </th> <td>   3084.</td>
+</tr>
+<tr>
+  <th>Df Model:</th>              <td>     3</td>      <th>                     </th>     <td> </td>   
+</tr>
+<tr>
+  <th>Covariance Type:</th>      <td>nonrobust</td>    <th>                     </th>     <td> </td>   
+</tr>
+</table>
+<table class="simpletable">
+<tr>
+         <td></td>            <th>coef</th>     <th>std err</th>      <th>t</th>      <th>P>|t|</th>  <th>[0.025</th>    <th>0.975]</th>  
+</tr>
+<tr>
+  <th>Intercept</th>       <td>   43.4096</td> <td>    1.052</td> <td>   41.275</td> <td> 0.000</td> <td>   41.342</td> <td>   45.477</td>
+</tr>
+<tr>
+  <th>dist_to_mrt_m</th>   <td>   -0.0070</td> <td>    0.000</td> <td>  -17.889</td> <td> 0.000</td> <td>   -0.008</td> <td>   -0.006</td>
+</tr>
+<tr>
+  <th>house_age_0_15</th>  <td>    4.8450</td> <td>    1.143</td> <td>    4.239</td> <td> 0.000</td> <td>    2.598</td> <td>    7.092</td>
+</tr>
+<tr>
+  <th>house_age_30_45</th> <td>   -0.1016</td> <td>    1.355</td> <td>   -0.075</td> <td> 0.940</td> <td>   -2.765</td> <td>    2.562</td>
+</tr>
+</table>
+<table class="simpletable">
+<tr>
+  <th>Omnibus:</th>       <td>145.540</td> <th>  Durbin-Watson:     </th> <td>   2.124</td> 
+</tr>
+<tr>
+  <th>Prob(Omnibus):</th> <td> 0.000</td>  <th>  Jarque-Bera (JB):  </th> <td>1077.318</td> 
+</tr>
+<tr>
+  <th>Skew:</th>          <td> 1.296</td>  <th>  Prob(JB):          </th> <td>1.16e-234</td>
+</tr>
+<tr>
+  <th>Kurtosis:</th>      <td>10.466</td>  <th>  Cond. No.          </th> <td>6.17e+03</td> 
+</tr>
+</table><br/><br/>Notes:<br/>[1] Standard Errors assume that the covariance matrix of the errors is correctly specified.<br/>[2] The condition number is large, 6.17e+03. This might indicate that there are<br/>strong multicollinearity or other numerical problems.
+
+
+
+What about distance to mrt? Please plot its scatterplot with the dependent variable and verify, if any transformation is needed:
+
+
+```python
+import matplotlib.pyplot as plt
+import numpy as np
+
+plt.scatter(df_estate['dist_to_mrt_m'], df_estate['price_twd_msq'])
+
+plt.scatter(np.log(df_estate['dist_to_mrt_m']), df_estate['price_twd_msq'])
+```
+
+
+
+
+    <matplotlib.collections.PathCollection at 0x1c994bf6350>
+
+
+
+
+    
+![png](Exercise10_files/Exercise10_46_1.png)
+    
+
+
+
+```python
+# If any transformation is necessary, please estimate the Model3 with the transformed distance to mrt.
+
+
+model3 = smf.ols('price_twd_msq ~ np.log(dist_to_mrt_m) + house_age_0_15 + house_age_30_45', data=df_estate).fit()
+print(model3.summary())
+```
+
+                                OLS Regression Results                            
+    ==============================================================================
+    Dep. Variable:          price_twd_msq   R-squared:                       0.560
+    Model:                            OLS   Adj. R-squared:                  0.557
+    Method:                 Least Squares   F-statistic:                     174.2
+    Date:                Sun, 07 Jun 2026   Prob (F-statistic):           8.14e-73
+    Time:                        16:03:05   Log-Likelihood:                -1497.6
+    No. Observations:                 414   AIC:                             3003.
+    Df Residuals:                     410   BIC:                             3019.
+    Df Model:                           3                                         
+    Covariance Type:            nonrobust                                         
+    =========================================================================================
+                                coef    std err          t      P>|t|      [0.025      0.975]
+    -----------------------------------------------------------------------------------------
+    Intercept                92.4262      2.946     31.378      0.000      86.636      98.216
+    np.log(dist_to_mrt_m)    -8.7280      0.414    -21.083      0.000      -9.542      -7.914
+    house_age_0_15            3.4577      1.067      3.240      0.001       1.360       5.556
+    house_age_30_45          -1.0732      1.258     -0.853      0.394      -3.546       1.399
+    ==============================================================================
+    Omnibus:                      183.268   Durbin-Watson:                   2.097
+    Prob(Omnibus):                  0.000   Jarque-Bera (JB):             1935.230
+    Skew:                           1.594   Prob(JB):                         0.00
+    Kurtosis:                      13.101   Cond. No.                         45.3
+    ==============================================================================
+    
+    Notes:
+    [1] Standard Errors assume that the covariance matrix of the errors is correctly specified.
+    
+
+Discuss the results...
+
+* Prices drop sharply near the MRT station and then stabilize, which is why we used a logarithm.
+* Building age significantly affects the price (new and very old houses have different prices than average ones).
+* Adding new variables and the logarithm greatly improved the model's predictive effectiveness.
+
+
+
+```python
+#Calculating residual standard error of Model1
+mse_result1 = model1.mse_resid
+rse_result1 = np.sqrt(mse_result1)
+print('The residual standard error for the above model is:',np.round(mse_result1,3))
+```
+
+    The residual standard error for the above model is: 101.375
+    
+
+
+```python
+#Calculating residual standard error of Model2
+mse_result2 = result2.mse_resid
+rse_result2 = np.sqrt(mse_result2)
+print('The residual standard error for the above model is:',np.round(rse_result2,3))
+```
+
+    The residual standard error for the above model is: 9.796
+    
+
+Looking at model summary, we see that variables .... are insignificant, so let's estimate the model without those variables:
+
+
+```python
+# Estimate next model here
+
+model4 = smf.ols('price_twd_msq ~ np.log(dist_to_mrt_m) + house_age_0_15', data=df_estate).fit()
+print(model4.summary())
+```
+
+                                OLS Regression Results                            
+    ==============================================================================
+    Dep. Variable:          price_twd_msq   R-squared:                       0.560
+    Model:                            OLS   Adj. R-squared:                  0.557
+    Method:                 Least Squares   F-statistic:                     261.1
+    Date:                Sun, 07 Jun 2026   Prob (F-statistic):           6.40e-74
+    Time:                        16:03:06   Log-Likelihood:                -1497.9
+    No. Observations:                 414   AIC:                             3002.
+    Df Residuals:                     411   BIC:                             3014.
+    Df Model:                           2                                         
+    Covariance Type:            nonrobust                                         
+    =========================================================================================
+                                coef    std err          t      P>|t|      [0.025      0.975]
+    -----------------------------------------------------------------------------------------
+    Intercept                91.4396      2.708     33.763      0.000      86.116      96.764
+    np.log(dist_to_mrt_m)    -8.6469      0.403    -21.467      0.000      -9.439      -7.855
+    house_age_0_15            3.9415      0.904      4.360      0.000       2.164       5.719
+    ==============================================================================
+    Omnibus:                      180.226   Durbin-Watson:                   2.094
+    Prob(Omnibus):                  0.000   Jarque-Bera (JB):             1884.848
+    Skew:                           1.562   Prob(JB):                         0.00
+    Kurtosis:                      12.975   Cond. No.                         40.7
+    ==============================================================================
+    
+    Notes:
+    [1] Standard Errors assume that the covariance matrix of the errors is correctly specified.
+    
+
+### Evaluating multi-collinearity
+
+There are many standards researchers apply for deciding whether a VIF is too large. In some domains, a VIF over 2 is worthy of suspicion. Others set the bar higher, at 5 or 10. Others still will say you shouldn't pay attention to these at all. Ultimately, the main thing to consider is that small effects are more likely to be "drowned out" by higher VIFs, but this may just be a natural, unavoidable fact with your model.
+
+
+```python
+from statsmodels.stats.outliers_influence import variance_inflation_factor
+X_vif = df_estate[['dist_to_mrt_m', 'house_age_0_15', 'house_age_30_45']].copy()
+X_vif = X_vif.fillna(0)  # Fill missing values if any
+
+# Add constant (intercept)
+X_vif = sm.add_constant(X_vif)
+
+# Calculate VIF for each feature
+vif_data = pd.DataFrame()
+vif_data["feature"] = X_vif.columns
+vif_data["VIF"] = [variance_inflation_factor(X_vif.values, i) for i in range(X_vif.shape[1])]
+
+print(vif_data)
+```
+
+               feature       VIF
+    0            const  4.772153
+    1    dist_to_mrt_m  1.061497
+    2   house_age_0_15  1.399276
+    3  house_age_30_45  1.400308
+    
+
+Discuss the results...
+
+
+
+
+* VIF checks if our variables are duplicating the exact same information.
+* Results close to 1.0 mean there is no problem (no multicollinearity).
+* Distance to the MRT and building age are independent of each other, and both are useful predictors.
+
+Finally we test our best model on test dataset (change, if any transformation on dist_to_mrt_m was needed):
+
+
+```python
+# Prepare test predictors (must match training predictors)
+X_test = test[['dist_to_mrt_m', 'house_age_0_15', 'house_age_30_45']].copy()
+X_test = X_test.fillna(0)
+X_test = sm.add_constant(X_test)
+
+# True values
+y_test = test['price_twd_msq']
+
+# Predict using model2
+y_pred = result2.predict(X_test)
+
+# Calculate RMSE as an example metric
+from sklearn.metrics import mean_squared_error
+rmse = np.sqrt(mean_squared_error(y_test, y_pred))
+print(f"Test RMSE: {rmse:.2f}")
+```
+
+    Test RMSE: 8.38
+    
+
+Interpret results...
+
+* RMSE represents the average error our model makes when predicting the house price.
+* The result is given in the exact same units as the real estate market prices.
+* This allows us to evaluate how well the model will perform in real life on entirely new data.
+
+
+## Variable selection using best subset regression
+
+*Best subset and stepwise (forward, backward, both) techniques of variable selection can be used to come up with the best linear regression model for the dependent variable medv.*
+
+
+```python
+# Best subset selection using sklearn's SequentialFeatureSelector (forward and backward)
+from sklearn.feature_selection import SequentialFeatureSelector
+from sklearn.linear_model import LinearRegression
+
+# Prepare predictors and target
+X = df_estate[['dist_to_mrt_m', 'n_convenience', 'house_age_0_15', 'house_age_15_30', 'house_age_30_45']]
+y = df_estate['price_twd_msq']
+
+# Initialize linear regression model
+lr = LinearRegression()
+
+# Forward stepwise selection
+sfs_forward = SequentialFeatureSelector(lr, n_features_to_select='auto', direction='forward', cv=5)
+sfs_forward.fit(X, y)
+print("Forward selection support:", sfs_forward.get_support())
+print("Selected features (forward):", X.columns[sfs_forward.get_support()].tolist())
+
+# Backward stepwise selection
+sfs_backward = SequentialFeatureSelector(lr, n_features_to_select='auto', direction='backward', cv=5)
+sfs_backward.fit(X, y)
+print("Backward selection support:", sfs_backward.get_support())
+print("Selected features (backward):", X.columns[sfs_backward.get_support()].tolist())
+```
+
+    Forward selection support: [ True  True False False False]
+    Selected features (forward): ['dist_to_mrt_m', 'n_convenience']
+    Backward selection support: [ True  True False False  True]
+    Selected features (backward): ['dist_to_mrt_m', 'n_convenience', 'house_age_30_45']
+    
+
+### Comparing competing models
+
+
+```python
+import statsmodels.api as sm
+
+# Example: Compare AIC for models selected by forward and backward stepwise selection
+
+# Forward selection model
+features_forward = X.columns[sfs_forward.get_support()].tolist()
+X_forward = df_estate[features_forward]
+X_forward = sm.add_constant(X_forward)
+model_forward = sm.OLS(y, X_forward).fit()
+print("AIC (forward selection):", model_forward.aic)
+
+# Backward selection model
+features_backward = X.columns[sfs_backward.get_support()].tolist()
+X_backward = df_estate[features_backward]
+X_backward = sm.add_constant(X_backward)
+model_backward = sm.OLS(y, X_backward).fit()
+print("AIC (backward selection):", model_backward.aic)
+
+# You can print summary for the best model (e.g., forward)
+print(model_forward.summary())
+```
+
+    AIC (forward selection): 3057.2813425866216
+    AIC (backward selection): 3047.991777087278
+                                OLS Regression Results                            
+    ==============================================================================
+    Dep. Variable:          price_twd_msq   R-squared:                       0.497
+    Model:                            OLS   Adj. R-squared:                  0.494
+    Method:                 Least Squares   F-statistic:                     202.7
+    Date:                Sun, 07 Jun 2026   Prob (F-statistic):           5.61e-62
+    Time:                        16:03:06   Log-Likelihood:                -1525.6
+    No. Observations:                 414   AIC:                             3057.
+    Df Residuals:                     411   BIC:                             3069.
+    Df Model:                           2                                         
+    Covariance Type:            nonrobust                                         
+    =================================================================================
+                        coef    std err          t      P>|t|      [0.025      0.975]
+    ---------------------------------------------------------------------------------
+    const            39.1229      1.300     30.106      0.000      36.568      41.677
+    dist_to_mrt_m    -0.0056      0.000    -11.799      0.000      -0.007      -0.005
+    n_convenience     1.1976      0.203      5.912      0.000       0.799       1.596
+    ==============================================================================
+    Omnibus:                      191.943   Durbin-Watson:                   2.126
+    Prob(Omnibus):                  0.000   Jarque-Bera (JB):             2159.977
+    Skew:                           1.671   Prob(JB):                         0.00
+    Kurtosis:                      13.679   Cond. No.                     4.58e+03
+    ==============================================================================
+    
+    Notes:
+    [1] Standard Errors assume that the covariance matrix of the errors is correctly specified.
+    [2] The condition number is large, 4.58e+03. This might indicate that there are
+    strong multicollinearity or other numerical problems.
+    
+
+From Best subset regression and stepwise selection (forward, backward, both), we see that the models selected by forward and backward selection may include different sets of predictors, depending on their contribution to model fit.
+
+By comparing AIC values, the model with the lowest AIC is preferred, as it balances model complexity and goodness of fit.
+
+In this case, the summary output for the best model (e.g., forward selection) shows which variables are most important for predicting price_twd_msq. This approach helps identify the most relevant predictors and avoid overfitting by excluding unnecessary variables.
+
+Run model diagnostics for the BEST model:
+
+
+```python
+plt.scatter(model_forward.fittedvalues, model_forward.resid,
+            color='royalblue',
+            alpha=0.7,
+            edgecolor='white')
+plt.axhline(0, color='crimson', linestyle='--', linewidth=2)
+plt.xlabel('Fitted Values')
+plt.ylabel('Residuals')
+plt.show()
+
+sm.qqplot(model_forward.resid, line='s',
+          markerfacecolor='royalblue',
+          markeredgecolor='white',
+          alpha=0.7)
+plt.show()
+```
+
+
+    
+![png](Exercise10_files/Exercise10_67_0.png)
     
 
 
 
     
-![png](Exercise9_files/Exercise9_67_1.png)
+![png](Exercise10_files/Exercise10_67_1.png)
     
 
 
-Interpretation of the results and other thoughts
+Finally, we can check the Out-of-sample Prediction or test error (MSPE):
 
-Data Preprocessing:
-Before conducting the analysis, the dataset was cleaned. Instead of dropping rows with missing values, missing numerical values were imputed using the mean of their respective columns.
 
-Correlation Heatmap:
-The computed correlation matrix provides a macro-level view of how numeric business metrics interact. By examining the heatmap, we can quickly identify which financial or operational variables drive each other (e.g., Total Sales and Tax) and which are completely independent.
+```python
+X_test = test[features_forward].copy()
+X_test = X_test.fillna(0)
+X_test = sm.add_constant(X_test)
 
-Visual Analysis (Unit Price vs. Quantity):
-To thoroughly investigate the relationship between product cost and customer purchasing habits, a scatter plot with a regression line was generated for Unit Price and Quantity.
-Observation: The red regression line is almost perfectly flat, and the data points are distributed evenly across different price tiers.
-Business Insight:There is no linear correlation between the price of a single unit and the number of items a customer buys. Customers purchase items in similar quantities (1 to 5 units) regardless of whether the product is cheap or expensive. From a business perspective, this means that unit price is not the primary driver of the transaction size in terms of volume.
+# True values
+y_test = test['price_twd_msq']
+
+# Predict using the best model (e.g., forward selection)
+y_pred = model_forward.predict(X_test)
+
+# Calculate MSPE (Mean Squared Prediction Error)
+mspe = np.mean((y_test - y_pred) ** 2)
+print(f"Test MSPE (out-of-sample): {mspe:.2f}")
+```
+
+    Test MSPE (out-of-sample): 64.80
+    
+
+## Cross Validation
+
+In Python, for cross-validation of regression models is usually done with cross_val_score from sklearn.model_selection.
+
+To get the raw cross-validation estimate of prediction error (e.g., mean squared error), use:
+
+
+```python
+from sklearn.model_selection import cross_val_score
+from sklearn.linear_model import LinearRegression
+
+X = df_estate[['dist_to_mrt_m', 'house_age_0_15', 'house_age_30_45']]
+y = df_estate['price_twd_msq']
+
+model = LinearRegression()
+
+# 5-fold cross-validation, scoring negative MSE (so we multiply by -1 to get positive MSE)
+cv_scores = cross_val_score(model, X, y, cv=5, scoring='neg_mean_squared_error')
+
+# Raw cross-validation estimate of prediction error (mean MSE)
+cv_mse = -cv_scores.mean()
+cv_rmse = np.sqrt(cv_mse)
+
+print(f"Cross-validated MSE: {cv_mse:.2f}")
+print(f"Cross-validated RMSE: {cv_rmse:.2f}")
+```
+
+    Cross-validated MSE: 95.90
+    Cross-validated RMSE: 9.79
+    
 
 # Summary
 
-There are many ways to *describe* our data:
-
-- Measure **central tendency**.
-
-- Measure its **variability**; **skewness** and **kurtosis**.
-
-- Measure what **correlations** our data have.
-
-All of these are **useful** and all of them are also **exploratory data analysis** (EDA).
+1. Do you understand all numerical measures printed in the SUMMARY of the regression report?
+2. Why do we need a cross-validation?
+3. What are the diagnostic plots telling us?
+4. How to compare similar, but competing models?
+5. What is VIF telling us?
+6. How to choose best set of predictors for the model?
